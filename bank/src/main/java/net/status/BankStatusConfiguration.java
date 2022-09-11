@@ -1,0 +1,13 @@
+package net.status;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+@SpringBootApplication
+public class BankStatusConfiguration {
+    public static void main(String[] args) {
+        SpringApplication.run(BankStatusConfiguration.class, args);
+    }
+}
