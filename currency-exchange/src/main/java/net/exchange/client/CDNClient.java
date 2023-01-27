@@ -1,4 +1,4 @@
-package net.exchange.service;
+package net.exchange.client;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,22 +12,27 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 @Service
-public class CDNIntegrationService {
-    @Value("${exchange.uri}")
-    String serverUrl;
-    @Autowired
-    RestTemplate restTemplate;
+public class CDNClient {
+    private final String serverUrl;
+    private final RestTemplate restTemplate;
 
-    public ResponseEntity<String> sendRequestToCDNI(String currencyCodeFrom, String currencyCodeTo) {
-        String echangeServerUrl = String.format(serverUrl, currencyCodeFrom.toLowerCase(), currencyCodeTo.toLowerCase());
-        return restTemplate.getForEntity(echangeServerUrl, String.class);
+    @Autowired
+    public CDNClient(@Value("${exchange.uri}") String serverUrl,
+                     RestTemplate restTemplate) {
+        this.serverUrl = serverUrl;
+        this.restTemplate = restTemplate;
     }
 
-    public BigDecimal getExchangedCurrency(String responce, String currencyCodeTo) {
+    public ResponseEntity<String> sendRequestToCDNI(String currencyCodeFrom, String currencyCodeTo) {
+        String exchangeServerUrl = String.format(serverUrl, currencyCodeFrom.toLowerCase(), currencyCodeTo.toLowerCase());
+        return restTemplate.getForEntity(exchangeServerUrl, String.class);
+    }
+
+    public BigDecimal getExchangedCurrency(String response, String currencyCodeTo) {
         JsonNode node;
         ObjectMapper mapper = new ObjectMapper();
         try {
-            node = mapper.readTree(responce);
+            node = mapper.readTree(response);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
