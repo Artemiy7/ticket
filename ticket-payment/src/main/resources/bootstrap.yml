@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: ticket-payment
+  cloud:
+    config:
+      uri: http://localhost:8888
+resilience4j:
+  circuitbreaker:
+    instances:
+      pdf-generator:
+        minimumNumberOfCalls: 3
+      currency-exchange:
+        minimumNumberOfCalls: 4
