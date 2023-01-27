@@ -1,6 +1,6 @@
-package net.status.controllers;
+package net.status.controller;
 
-import net.status.dto.PaymentDTO;
+import net.status.request.PaymentRequest;
 import net.status.util.StatusGenerator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class StatusCheckController {
 
     @RequestMapping(value = "/payment", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<HttpStatus> postPayment(@RequestBody PaymentDTO paymentDTO) {
+    public ResponseEntity<HttpStatus> postPayment(@RequestBody PaymentRequest paymentRequest) {
         HttpStatus httpStatus = StatusGenerator.generatePaymentStatus();
         return new ResponseEntity<>(httpStatus);
     }
