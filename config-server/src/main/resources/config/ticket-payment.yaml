@@ -55,8 +55,9 @@ service:
         date: 0.1
         seat: 0.7
 
-exchange:
-  uri: http://localhost:8081/exchange/%s/%s/%s
+currency-exchange:
+  exchangeCurrency:
+    url: //currency-exchange/exchange/%s/%s/%s
 
 pdf-generator:
   generateTicketPdf:
