@@ -4,3 +4,9 @@ spring:
     cloud:
       config:
         uri: http://localhost:8888
+
+resilience4j.circuitbreaker:
+  configs:
+    currency-exchange:
+      failureRateThreshold: 25
+      slowCallRateThreshold: 25

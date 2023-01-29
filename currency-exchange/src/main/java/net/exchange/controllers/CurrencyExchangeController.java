@@ -20,7 +20,9 @@ public class CurrencyExchangeController {
     }
 
     @RequestMapping(value = "/{currencyCodeFrom}/{currencyCodeTo}/{currencyAmount}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<CurrencyExchangeResponse> getCurrency(@PathVariable String currencyCodeFrom, @PathVariable String currencyCodeTo, @PathVariable BigDecimal currencyAmount) {
+    public ResponseEntity<CurrencyExchangeResponse> getCurrency(@PathVariable String currencyCodeFrom,
+                                                                @PathVariable String currencyCodeTo,
+                                                                @PathVariable BigDecimal currencyAmount) {
         if (currencyCodeFrom.equals(currencyCodeTo))
             return ResponseEntity.badRequest().build();
         return ResponseEntity.ok()
