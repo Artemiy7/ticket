@@ -2,15 +2,13 @@ package net.pdfgenerator.dto.ticketorder;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import net.pdfgenerator.enums.ticket.SeatPlaceType;
 import org.springframework.lang.NonNull;
 
 import java.math.BigDecimal;
 
+@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
