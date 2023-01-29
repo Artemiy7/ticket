@@ -13,5 +13,7 @@ public class PaymentRequest {
     @NonNull
     private long bankAccount;
     @NonNull
+    private long ticketOrderId;
+    @NonNull
     private BigDecimal amountSum;
 }

@@ -57,7 +57,7 @@ public class OccasionService {
         OccasionCost occasionCost = OccasionCost.getBeanByName(occasionEntity.getTicketType().getTicketTypeObject());
 
         for (OccasionSeatDto occasionSeatDto : occasionDto.getOccasionSeatDto()) {
-            occasionCost.calculateTicketCost(occasionSeatDto, occasionEntity.getInitialCost());
+            occasionSeatDto.setCost(occasionCost.calculateTicketCost(occasionSeatDto, occasionEntity.getInitialCost()));
         }
         return Optional.of(occasionDto);
     }

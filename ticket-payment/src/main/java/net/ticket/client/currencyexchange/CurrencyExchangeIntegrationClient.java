@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -20,15 +19,15 @@ import java.math.BigDecimal;
 public class CurrencyExchangeIntegrationClient {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorIntegrationClient.class);
-    private final String serverUrl;
+    private final String exchangeCurrencyUrl;
     private final RestTemplate loadBalancedRestTemplate;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Autowired
-    public CurrencyExchangeIntegrationClient(@Value("${exchange.uri}") String serverUrl,
+    public CurrencyExchangeIntegrationClient(@Value("${currency-exchange.exchangeCurrency.url}") String exchangeCurrencyUrl,
                                          RestTemplate loadBalancedRestTemplate,
                                          CircuitBreakerFactory circuitBreakerFactory) {
-        this.serverUrl = serverUrl;
+        this.exchangeCurrencyUrl = exchangeCurrencyUrl;
         this.loadBalancedRestTemplate = loadBalancedRestTemplate;
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
@@ -37,10 +36,10 @@ public class CurrencyExchangeIntegrationClient {
         try {
             ResponseEntity<CurrencyExchangeResponse> responseEntity = circuitBreakerFactory
                     .create("currency-exchange")
-                    .run(() -> loadBalancedRestTemplate.getForEntity(String.format(serverUrl, currencyCodeFrom.toLowerCase(), currencyCodeTo.toLowerCase(), currencyAmount),
+                    .run(() -> loadBalancedRestTemplate.getForEntity(String.format(exchangeCurrencyUrl, currencyCodeFrom.toLowerCase(), currencyCodeTo.toLowerCase(), currencyAmount),
                             CurrencyExchangeResponse.class));
             if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
-                LOGGER.info("Currency exchanged ");
+                LOGGER.info("Currency exchanged from " + currencyCodeFrom + " to " + currencyCodeTo);
                 return responseEntity.getBody();
             }
         } catch (HttpClientErrorException.BadRequest e) {

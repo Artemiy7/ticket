@@ -22,9 +22,6 @@ public class OccasionSeatRepository {
             if (query.getResultList().size() > 1) {
                 throw new RuntimeException("OccasionSeat is corrupted");
             }
-            if (query.getResultList().size() < 0) {
-                throw new RuntimeException();
-            }
             try {
                 return Optional.ofNullable((OccasionSeatEntity) query.getResultList().get(0));
             } catch (IndexOutOfBoundsException e) {

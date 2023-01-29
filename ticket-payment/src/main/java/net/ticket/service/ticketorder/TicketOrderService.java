@@ -12,6 +12,7 @@ import net.ticket.response.currencyexchange.CurrencyExchangeResponse;
 import net.ticket.client.bank.BankIntegrationClient;
 import net.ticket.client.currencyexchange.CurrencyExchangeIntegrationClient;
 import net.ticket.client.pdfgenerator.PdfGeneratorIntegrationClient;
+import net.ticket.ticketexception.bank.InvalidBankAccount;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionSeatException;
 import net.ticket.ticketexception.occasion.NoSuchTicketOrderEntityException;
@@ -19,7 +20,6 @@ import net.ticket.ticketexception.occasion.OccasionSeatIsBookedException;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.NoSuchBankAccount;
 import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
-import net.ticket.transformers.CustomerDtoTransformerToCustomerEntity;
 import net.ticket.transformers.TicketOrderDtoToTicketOrderEntityTransformer;
 import net.ticket.transformers.TicketOrderEntityToTicketOrderDtoTransformer;
 import org.slf4j.Logger;
@@ -70,9 +70,9 @@ public class TicketOrderService {
         this.paymentRequestService = paymentRequestService;
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public long createTicket(TicketOrderDto ticketOrderDto) throws NoResultException, NoSuchOccasionException,
-            OccasionSeatIsBookedException, NoSuchBankAccount, BankServerError, NotEnoughAmountForPayment, NoSuchOccasionSeatException {
+            OccasionSeatIsBookedException, NoSuchBankAccount, BankServerError, NotEnoughAmountForPayment, NoSuchOccasionSeatException, InvalidBankAccount {
         Optional<OccasionEntity> occasionEntityOptional = occasionRepository.findOccasionByNameAndDate(ticketOrderDto);
         if (occasionEntityOptional.isEmpty())
             throw new NoSuchOccasionException("No such Occasion " + ticketOrderDto.getOccasionName());
@@ -80,7 +80,8 @@ public class TicketOrderService {
         for(CustomerTicketDto customerTicketDto : ticketOrderDto.getCustomerTicketDto()) {
             OccasionSeatEntity occasionSeatEntity =
                     occasionSeatRepository.findOccasionSeats(occasionEntityOptional.get(),
-                            customerTicketDto).orElseThrow(() -> new NoSuchOccasionSeatException("OccasionSeat is not exist " + customerTicketDto.getOccasionSeat()));
+                            customerTicketDto).orElseThrow(() -> new NoSuchOccasionSeatException("OccasionSeat" + customerTicketDto.getSeat() +
+                            " is not exist in occasion " + customerTicketDto.getTicketOrderDto().getOccasionName()));
             if (occasionSeatEntity.isBooked())
                 throw new OccasionSeatIsBookedException("OccasionSeat is booked " + occasionSeatEntity.getOccasionSeatId());
             customerTicketDto.setOccasionSeat(occasionSeatEntity);
@@ -105,7 +106,8 @@ public class TicketOrderService {
                             " OccasionId " + customerDto.getOccasionSeat().getOccasionSeatId());
                 });
 
-        bankIntegrationClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderDto));
+        if (bankIntegrationClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
+            ticketOrderEntity.setPaid(true);
 
         LOGGER.info("TicketOrder created successfully, bankAccount: " + ticketOrderEntity.getBankAccount() +
                 " ticketOrderId: " + ticketOrderEntity.getTicketOrderId() +

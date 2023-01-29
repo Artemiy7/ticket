@@ -10,7 +10,7 @@ public interface OccasionCost {
     static OccasionCost getBeanByName(String classType) {
         return (OccasionCost) ApplicationContextProvider.getApplicationContext().getBean(classType);
     }
-    void calculateTicketCost(OccasionSeatDto occasionSeatDto, BigDecimal initialCost) throws CorruptedOccasionSeatException;
+    BigDecimal calculateTicketCost(OccasionSeatDto occasionSeatDto, BigDecimal initialCost) throws CorruptedOccasionSeatException;
 
     BigDecimal getFieldValueByName(String fieldName) throws NoSuchFieldException, IllegalAccessException;
 }

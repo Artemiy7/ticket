@@ -1,14 +1,16 @@
 package net.ticket.client.bank;
 
+import lombok.SneakyThrows;
 import net.ticket.request.payment.PaymentRequest;
 import net.ticket.ticketexception.bank.BankServerError;
+import net.ticket.ticketexception.bank.InvalidBankAccount;
 import net.ticket.ticketexception.bank.NoSuchBankAccount;
 import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
@@ -20,54 +22,76 @@ public class BankIntegrationClient {
     private final String bankAccountUri;
     private final String bankPaymentUri;
     private final RestTemplate restTemplate;
+    private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Autowired
     public BankIntegrationClient(@Value("${service.bank.account.uri}") String bankAccountUri,
                                  @Value("${service.bank.payment.uri}")String bankPaymentUri,
-                                 RestTemplate restTemplate) {
+                                 RestTemplate restTemplate,
+                                 CircuitBreakerFactory circuitBreakerFactory) {
         this.bankAccountUri = bankAccountUri;
         this.bankPaymentUri = bankPaymentUri;
         this.restTemplate = restTemplate;
+        this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
-    public void sendConfirmationRequestToBankAccount(long bankAccount) throws NoSuchBankAccount, BankServerError {
+    public void sendConfirmationRequestToBankAccount(long bankAccount) throws NoSuchBankAccount, BankServerError, InvalidBankAccount {
        String bankUri = String.format(bankAccountUri, bankAccount);
-        try {
-            HttpStatus httpStatus = restTemplate.getForEntity(bankUri, HttpStatus.class).getStatusCode();
-            if (httpStatus.equals(HttpStatus.OK)) {
-                LOGGER.info("Confirmation request is successful " + bankAccount);
-            }
-        } catch (HttpClientErrorException.NotFound e) {
+       boolean response = circuitBreakerFactory
+               .create("bank-simulator")
+               .run(() -> restTemplate.getForEntity(bankUri, Boolean.class).getBody(),
+                    throwable -> confirmationRequestFallback(throwable, bankAccount));
+       if (response)
+           LOGGER.info("Confirmation request is successful " + bankAccount);
+    }
+
+    @SneakyThrows
+    private boolean confirmationRequestFallback(Throwable throwable, long bankAccount) {
+        if (throwable instanceof HttpClientErrorException.NotFound) {
             LOGGER.error("No such bank account in a bank " + bankAccount);
             throw new NoSuchBankAccount("No such bank account in a bank");
-        } catch (HttpServerErrorException.InternalServerError e) {
+        } else if (throwable instanceof HttpServerErrorException.InternalServerError) {
             LOGGER.error("Error on bank server while confirming bank account " + bankAccount);
             throw new BankServerError("Error on bank server while confirming bank account");
-        } catch (HttpStatusCodeException e) {
+        } else if (throwable instanceof HttpClientErrorException.NotAcceptable) {
+            LOGGER.error("Bank card is outdated " + bankAccount);
+            throw new InvalidBankAccount("Bank card is outdated " + bankAccount);
+        } else if (throwable instanceof HttpStatusCodeException) {
             LOGGER.error("Error while performing confirmation request to bank " + bankAccount);
-            throw new RuntimeException("Error while performing confirmation request to bank " + e.getMessage());
+            throw new RuntimeException("Error while performing confirmation request to bank " +
+                    bankAccount + " " + throwable.getMessage());
         }
-        LOGGER.error("Unknown response while performing confirmation request to " + bankAccount);
-        throw new RuntimeException("Unknown response while performing confirmation request");
+        throw new RuntimeException(throwable);
     }
 
-    public void performPaymentRequestToBank(PaymentRequest paymentRequest) throws NotEnoughAmountForPayment, BankServerError {
-        try {
-            HttpStatus httpStatus = restTemplate.postForEntity(bankPaymentUri, paymentRequest, HttpStatus.class).getStatusCode();
-            if (httpStatus.equals(HttpStatus.OK)) {
-                LOGGER.info("Payment request is successful " + paymentRequest.getBankAccount());
-            }
-        } catch (HttpClientErrorException.NotFound e) {
+    public boolean performPaymentRequestToBank(PaymentRequest paymentRequest) throws NotEnoughAmountForPayment, BankServerError {
+        boolean response = circuitBreakerFactory
+                .create("bank-simulator")
+                .run(() -> restTemplate.postForEntity(bankPaymentUri, paymentRequest, Boolean.class).getBody(),
+                        throwable -> performPaymentRequestToBankFallback(throwable, paymentRequest));
+        if (response) {
+            LOGGER.info("Payment request is successful " + paymentRequest.getBankAccount());
+            return true;
+        }
+        throw new RuntimeException();
+    }
+
+    @SneakyThrows
+    private boolean performPaymentRequestToBankFallback(Throwable throwable, PaymentRequest paymentRequest) {
+        if (throwable instanceof HttpClientErrorException.NotFound) {
+            LOGGER.error("No such bank account in a bank " + paymentRequest.getBankAccount());
+            throw new NoSuchBankAccount("No such bank account in a bank");
+        } else if (throwable instanceof  HttpClientErrorException.NotAcceptable) {
             LOGGER.error("Not enough amount for payment " + paymentRequest.getBankAccount());
             throw new NotEnoughAmountForPayment("Not enough amount for payment");
-        } catch (HttpServerErrorException.InternalServerError e) {
+        } else if (throwable instanceof HttpServerErrorException.InternalServerError) {
             LOGGER.error("Error on bank server while performing payment " + paymentRequest.getBankAccount());
             throw new BankServerError("Error on bank server while performing payment");
-        } catch (HttpStatusCodeException e) {
+        } else if (throwable instanceof HttpStatusCodeException) {
             LOGGER.error("Error while performing payment request to bank " + paymentRequest.getBankAccount());
-            throw new RuntimeException("Error while performing payment request to bank " + e.getMessage());
+            throw new RuntimeException("Error while performing payment request to bank " +
+                    paymentRequest.getBankAccount() + " " + throwable.getMessage());
         }
-        LOGGER.error("Unknown response while performing payment to " + paymentRequest.getBankAccount());
-        throw new RuntimeException("Unknown response  while performing payment");
+        throw new RuntimeException(throwable);
     }
 }

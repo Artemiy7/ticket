@@ -33,13 +33,13 @@ public class IntercityTrainCost implements OccasionCost {
     }
 
     @Override
-    public void calculateTicketCost(OccasionSeatDto occasionSeatDto, BigDecimal initialCost) throws CorruptedOccasionSeatException {
+    public BigDecimal calculateTicketCost(OccasionSeatDto occasionSeatDto, BigDecimal initialCost) throws CorruptedOccasionSeatException {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNumberOfSeats())
                     .multiply(initialCost)
                     .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(seatCoefficient, 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
                     .divide(getFieldValueByName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
-            occasionSeatDto.setCost(bigDecimal);
+            return bigDecimal;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new CorruptedOccasionSeatException(e.getMessage());
         }

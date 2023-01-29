@@ -16,7 +16,6 @@ public class OccasionSeatDto {
     private BigDecimal cost;
     @NonNull
     private short seat;
-    @NonNull
     @JsonBackReference
     private OccasionDto occasionDto;
     @NonNull

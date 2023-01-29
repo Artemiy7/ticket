@@ -2,6 +2,7 @@ package net.ticket.enums.ticket;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Arrays;
@@ -13,15 +14,18 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum TicketType implements Serializable {
 
     //net.ticket.service.occasion.cost.train.IntercityTrainCost
+    @ApiModelProperty("TRAIN_INTERCITY")
     @JsonProperty("TRAIN_INTERCITY")
     TRAIN_INTERCITY("intercityTrainCost", SeatPlaceType.TRAIN_INTERCITY_ECONOMIC,
                                                         SeatPlaceType.TRAIN_INTERCITY_BUSINESS),
     //net.ticket.service.occasion.cost.concert.ConcertClubOccasionCost
+    @ApiModelProperty("CONCERT_CLUB")
     @JsonProperty("CONCERT_CLUB")
     CONCERT_CLUB("concertClubOccasionCost", SeatPlaceType.CONCERT_CLUB_BALCONY,
                                                           SeatPlaceType.CONCERT_CLUB_FAN,
                                                           SeatPlaceType.CONCERT_CLUB_VIP),
     //net.ticket.service.occasion.cost.concert.ConcertStadionOccasionCost
+    @ApiModelProperty("CONCERT_STADION")
     @JsonProperty("CONCERT_STADION")
     CONCERT_STADION("concertStadionOccasionCost", SeatPlaceType.CONCERT_STADION_VIP,
                                                                 SeatPlaceType.CONCERT_STADION_FAN,
@@ -58,6 +62,6 @@ public enum TicketType implements Serializable {
 
     @Override
     public String toString() {
-        return ticketTypeObject;
+        return name();
     }
 }

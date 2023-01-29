@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import net.ticket.dto.ticketorder.CustomerTicketDto;
 import net.ticket.dto.ticketorder.TicketOrderDto;
 import net.ticket.service.ticketorder.TicketOrderService;
+import net.ticket.ticketexception.bank.InvalidBankAccount;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionSeatException;
 import net.ticket.ticketexception.occasion.NoSuchTicketOrderEntityException;
@@ -70,6 +71,13 @@ public class TicketOrderRestController {
             headers.add("Server-Bank-Payment-Error", e.getMessage());
             return ResponseEntity
                     .status(HttpStatus.PAYMENT_REQUIRED)
+                    .headers(headers)
+                    .build();
+        } catch (InvalidBankAccount e) {
+            e.printStackTrace();
+            headers.add("Server-Bank-Payment-Error", e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
                     .headers(headers)
                     .build();
         }

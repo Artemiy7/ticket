@@ -1,5 +1,7 @@
 package net.ticket.service.ticketorder;
 
+import net.ticket.entity.ticketorder.CustomerTicketEntity;
+import net.ticket.entity.ticketorder.TicketOrderEntity;
 import net.ticket.request.payment.PaymentRequest;
 import net.ticket.dto.ticketorder.CustomerTicketDto;
 import net.ticket.dto.ticketorder.TicketOrderDto;
@@ -10,16 +12,17 @@ import java.util.Set;
 
 @Service
 public class PaymentRequestService {
-    public PaymentRequest buildPaymentRequest(TicketOrderDto ticketOrderDto) {
+    public PaymentRequest buildPaymentRequest(TicketOrderEntity ticketOrderEntity) {
         return PaymentRequest.builder()
-                         .bankAccount(ticketOrderDto.getBankAccount())
-                         .amountSum(addTicketCostForPaymentRequest(ticketOrderDto.getCustomerTicketDto()))
+                         .bankAccount(ticketOrderEntity.getBankAccount())
+                         .ticketOrderId(ticketOrderEntity.getTicketOrderId())
+                         .amountSum(addTicketCostForPaymentRequest(ticketOrderEntity.getCustomersEntitySet()))
                          .build();
     }
 
-    private BigDecimal addTicketCostForPaymentRequest(Set<CustomerTicketDto> customerTicketDtoSet) {
+    private BigDecimal addTicketCostForPaymentRequest(Set<CustomerTicketEntity> customerTicketEntities) {
         BigDecimal resultCost = BigDecimal.ZERO;
-        customerTicketDtoSet.forEach(customerDto -> resultCost.add(customerDto.getAmount()));
+        customerTicketEntities.forEach(customerDto -> resultCost.add(customerDto.getAmount()));
         return resultCost;
     }
 }

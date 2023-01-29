@@ -11,3 +11,5 @@ resilience4j:
         minimumNumberOfCalls: 3
       currency-exchange:
         minimumNumberOfCalls: 4
+      bank-simulator:
+        minimumNumberOfCalls: 100
