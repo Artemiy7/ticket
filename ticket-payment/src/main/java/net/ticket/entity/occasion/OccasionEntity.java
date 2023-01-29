@@ -23,33 +23,26 @@ public class OccasionEntity implements Comparable<OccasionEntity>, Serializable 
     @Column(name = "OccasionId")
     private long occasionId;
 
-    @Column(name = "OccasionName")
-    @NonNull
+    @Column(name = "OccasionName", nullable = false)
     private String occasionName;
 
-    @Column(name = "OccasionTime")
-    @NonNull
+    @Column(name = "OccasionTime", nullable = false)
     private LocalDateTime occasionTime;
 
-    @Column(name = "NumberOfSeats")
-    @NonNull
+    @Column(name = "NumberOfSeats", nullable = false)
     private short numberOfSeats;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "TicketType")
-    @NonNull
+    @Column(name = "TicketType", nullable = false)
     private TicketType ticketType;
 
-    @Column(name = "OccasionAddress")
-    @NonNull
+    @Column(name = "OccasionAddress", nullable = false)
     private String occasionAddress;
 
-    @Column(name = "IsActive")
-    @NonNull
+    @Column(name = "IsActive", nullable = false)
     private boolean isActive;
 
-    @Column(name = "InitialCost")
-    @NonNull
+    @Column(name = "InitialCost", nullable = false)
     private BigDecimal initialCost;
 
     @OneToMany(mappedBy = "occasionEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

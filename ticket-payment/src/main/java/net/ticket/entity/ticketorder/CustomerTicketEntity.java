@@ -21,27 +21,23 @@ public class CustomerTicketEntity {
     @Column(name = "CustomerTicketId")
     private long customerTicketId;
 
-    @Column(name = "FirstName")
-    @NonNull
+    @Column(name = "FirstName", nullable = false)
     private String firstName;
 
-    @Column(name = "LastName")
-    @NonNull
+    @Column(name = "LastName", nullable = false)
     private String lastName;
 
-    @Column(name = "Country")
-    @NonNull
+    @Column(name = "Country", nullable = false)
     private String country;
 
-    @JoinColumn(name = "OccasionSeatId")
+    @JoinColumn(name = "OccasionSeatId", nullable = false)
     @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     private OccasionSeatEntity occasionSeatEntity;
 
-    @Column(name = "Amount")
-    @NonNull
+    @Column(name = "Amount", nullable = false)
     private BigDecimal amount;
 
-    @JoinColumn(name = "TicketOrderId")
+    @JoinColumn(name = "TicketOrderId", nullable = false)
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     private TicketOrderEntity ticketOrderEntity;
 }
