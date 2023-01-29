@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @SpringBootApplication
-public class BankStatusConfiguration {
+public class BankSimulatorConfiguration {
     public static void main(String[] args) {
-        SpringApplication.run(BankStatusConfiguration.class, args);
+        SpringApplication.run(BankSimulatorConfiguration.class, args);
     }
 }
