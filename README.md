@@ -31,7 +31,9 @@ Endpoints and Models:
 
 
 
-Ticket pdf example for request:
+Ticket pdf example for requestS:
+
+POST localhost:8084/ticket/save
 
 {
     "customerTicketDto": [{
@@ -49,6 +51,8 @@ Ticket pdf example for request:
     "bankAccount": 2548870,
     "currency" : "uah"
 }
+
+GET localhost:8084/ticket/PDF/3000000001
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
