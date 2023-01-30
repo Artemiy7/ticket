@@ -1,4 +1,4 @@
-DROP DATABASE ticketpayment;
+DROP DATABASE IF EXISTS ticketpayment;
 
 CREATE DATABASE ticketpayment;
 
@@ -12,13 +12,13 @@ CREATE TABLE IF NOT EXISTS Occasion (
     InitialCost DOUBLE NOT NULL,
     TicketType VARCHAR(75) NOT NULL,
     IsActive BOOLEAN NOT NULL DEFAULT TRUE,
-    OccasionAddress VARCHAR(70) NOT NULL)
+    OccasionAddress VARCHAR(170) NOT NULL)
 ;
 
 ALTER TABLE Occasion AUTO_INCREMENT = 1000000001;
 
 insert into Occasion(OccasionName, OccasionTime, NumberOfSeats, InitialCost, TicketType, IsActive,  OccasionAddress)
-VALUES ('Consert Mettalica', '2023-11-22 22:10:00', 30, 10.00, 'CONCERT_CLUB', TRUE, 'Stadion Wembley');
+VALUES ('Concert Eric Clapton', '2023-11-22 22:10:00', 30, 10.00, 'CONCERT_CLUB', TRUE, 'Hard Rock Cafe London Picadilly Circus');
 
 
 CREATE TABLE IF NOT EXISTS OccasionSeat (
@@ -112,7 +112,7 @@ CREATE TABLE IF NOT EXISTS CustomerTicket (
     TicketOrderId BIGINT NOT NULL,
     OccasionSeatId BIGINT UNIQUE NOT NULL,
 	FOREIGN KEY (TicketOrderId) REFERENCES TicketOrder (TicketOrderId),
-	FOREIGN KEY (OccasionSeatId) REFERENCES OccasionSeat (OccasionSeatId))
-;
+	FOREIGN KEY (OccasionSeatId) REFERENCES OccasionSeat (OccasionSeatId)
+);
 
 ALTER TABLE CustomerTicket AUTO_INCREMENT = 4000000001;
