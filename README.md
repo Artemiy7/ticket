@@ -29,7 +29,10 @@ Endpoints and Models:
 ![image](https://user-images.githubusercontent.com/83453822/215364363-a69887ac-53a4-423f-a2ed-3dbe034a2e5b.png)
 
 
+
+
 Ticket pdf example for request:
+
 {
     "customerTicketDto": [{
          "firstName": "firstName2",
@@ -46,6 +49,7 @@ Ticket pdf example for request:
     "bankAccount": 2548870,
     "currency" : "uah"
 }
+
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
 
