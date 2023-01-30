@@ -19,8 +19,6 @@ import java.util.Optional;
 public class OccasionRepository {
     @PersistenceContext
     EntityManager entityManager;
-//    @PersistenceContext
-//    EntityManagerFactory entityManagerFactory;
 
     public Optional<OccasionEntity> getOccasionById(long id) {
         return Optional.ofNullable(entityManager.find(OccasionEntity.class, id));
