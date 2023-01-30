@@ -12,16 +12,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum TicketType implements Serializable {
 
-    //
     @JsonProperty("TRAIN_INTERCITY")
     TRAIN_INTERCITY("Train Intercity", SeatPlaceType.TRAIN_INTERCITY_ECONOMIC,
                                                       SeatPlaceType.TRAIN_INTERCITY_BUSINESS),
 
-    //ConcertClubOccasionCost
     @JsonProperty("CONCERT_CLUB")
     CONCERT_CLUB("Concert club", SeatPlaceType.CONCERT_CLUB_BALCONY,
-                                                           SeatPlaceType.CONCERT_CLUB_FAN,
-                                                           SeatPlaceType.CONCERT_CLUB_VIP);
+                                               SeatPlaceType.CONCERT_CLUB_FAN,
+                                               SeatPlaceType.CONCERT_CLUB_VIP),
+
+    @JsonProperty("CONCERT_STADION")
+    CONCERT_STADION("concertStadionOccasionCost", SeatPlaceType.CONCERT_STADION_VIP,
+                                                                SeatPlaceType.CONCERT_STADION_FAN,
+                                                                SeatPlaceType.CONCERT_STADION_SEAT);
 
     private static final Map<String, TicketType> ENUM_MAP;
     private String ticketTypeObject;

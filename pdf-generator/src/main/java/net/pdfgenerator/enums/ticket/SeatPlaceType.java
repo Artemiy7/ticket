@@ -9,19 +9,24 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public enum SeatPlaceType {
 
-    //net.ticket.service.occasion.cost.ConcertClubOccasionCost
     @JsonProperty("CONCERT_CLUB_VIP")
-    CONCERT_CLUB_VIP("concertClubVip"),
+    CONCERT_CLUB_VIP("concert club vip"),
     @JsonProperty("CONCERT_CLUB_FAN")
-    CONCERT_CLUB_FAN("concertClubFan"),
+    CONCERT_CLUB_FAN("Concert club fan"),
     @JsonProperty("CONCERT_CLUB_BALCONY")
     CONCERT_CLUB_BALCONY("Concert club balcony"),
 
-    //
+    @JsonProperty("CONCERT_STADION_VIP")
+    CONCERT_STADION_VIP("Concert stadion vip"),
+    @JsonProperty("CONCERT_STADION_FAN")
+    CONCERT_STADION_FAN("Concert stadion fan"),
+    @JsonProperty("CONCERT_STADION_SEAT")
+    CONCERT_STADION_SEAT("Concert stadion seat"),
+
     @JsonProperty("TRAIN_INTERCITY_BUSINESS")
-    TRAIN_INTERCITY_BUSINESS("dfdf"),
+    TRAIN_INTERCITY_BUSINESS("Train intercity business"),
     @JsonProperty("TRAIN_INTERCITY_ECONOMIC")
-    TRAIN_INTERCITY_ECONOMIC("TRAIN_INTERCITY_ECONOMIC");
+    TRAIN_INTERCITY_ECONOMIC("Train intercity economic");
 
     private static final Map<String, SeatPlaceType> ENUM_MAP;
     private String seatPlaceType;
