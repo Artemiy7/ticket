@@ -13,6 +13,7 @@
         <option value="$PROJECT_DIR$/ticket-payment/pom.xml" />
         <option value="$PROJECT_DIR$/currency-exchange/pom.xml" />
         <option value="$PROJECT_DIR$/pdf-generator/pom.xml" />
+        <option value="$PROJECT_DIR$/bank-simulator/pom.xml" />
       </list>
     </option>
   </component>
