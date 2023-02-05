@@ -31,8 +31,6 @@ Endpoints and Models:
 
 
 
-Ticket pdf example for requestS:
-
 POST localhost:8084/ticket/save
 
 {
@@ -53,6 +51,8 @@ POST localhost:8084/ticket/save
 }
 
 GET localhost:8084/ticket/PDF/3000000001
+
+Pdf ticket example:
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
