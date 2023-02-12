@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="a1 (generated)" id="1675121561539-4">
+        <createTable tableName="TicketOrder">
+            <column autoIncrement="true" name="TicketOrderId" type="BIGINT" startWith="3000000001">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="BankAccount" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Currency" type="VARCHAR(3)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="0" name="IsPaid" type="BIT(1)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TicketType" type="VARCHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="a1 (generated)" id="1675121561539-1">
+        <createTable tableName="CustomerTicket">
+            <column autoIncrement="true" name="CustomerTicketId" type="BIGINT" startWith="4000000001">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="FirstName" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="LastName" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Country" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="Amount" type="DECIMAL(15, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TicketOrderId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OccasionSeatId" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="a1 (generated)" id="1675127014965-6" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <addUniqueConstraint columnNames="OccasionSeatId" constraintName="OccasionSeatId" tableName="CustomerTicket"/>
+    </changeSet>
+    <changeSet author="a1 (generated)" id="1675127014965-8" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <createIndex indexName="TicketOrderId" tableName="CustomerTicket">
+            <column name="TicketOrderId"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="a1 (generated)" id="1675127014965-9" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <addForeignKeyConstraint baseColumnNames="TicketOrderId" baseTableName="CustomerTicket" constraintName="CustomerTicket_ibfk_1" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="TicketOrderId" referencedTableName="TicketOrder"/>
+    </changeSet>
+    <changeSet author="a1 (generated)" id="1675127014965-10" objectQuotingStrategy="QUOTE_ALL_OBJECTS">
+        <addForeignKeyConstraint baseColumnNames="OccasionSeatId" baseTableName="CustomerTicket" constraintName="CustomerTicket_ibfk_2" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="OccasionSeatId" referencedTableName="OccasionSeat"/>
+    </changeSet>
+</databaseChangeLog>

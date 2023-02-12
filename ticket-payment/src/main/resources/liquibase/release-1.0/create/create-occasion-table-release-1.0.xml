@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <changeSet author="a1 (generated)" id="1675121561539-2">
+        <createTable tableName="Occasion">
+            <column autoIncrement="true" name="OccasionId" type="BIGINT" startWith="1000000001">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="OccasionName" type="VARCHAR(25)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OccasionTime" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="NumberOfSeats" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="InitialCost" type="DOUBLE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="TicketType" type="VARCHAR(75)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValueNumeric="false" name="IsActive" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="OccasionAddress" type="VARCHAR(170)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
