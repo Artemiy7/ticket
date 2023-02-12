@@ -1,9 +1,0 @@
-server:
-  port: 8081
-exchange:
-  uri: https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/%s/%s.json
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
