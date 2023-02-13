@@ -1,10 +1,11 @@
 package net.ticket.client.pdfgenerator;
 
+import net.ticket.config.client.PdfGeneratorClientConfig;
 import net.ticket.dto.ticketorder.TicketOrderDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -15,18 +16,18 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class PdfGeneratorIntegrationClient {
-    private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorIntegrationClient.class);
-    private final String pdfGeneratorGenerateTicketPdfUri;
+public class PdfGeneratorClient {
+    private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorClient.class);
+    private final PdfGeneratorClientConfig pdfGeneratorClientConfig;
     private final RestTemplate loadBalancedRestTemplate;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Autowired
-    public PdfGeneratorIntegrationClient(@Value("${pdf-generator.generateTicketPdf.url}") String pdfGeneratorGenerateTicketPdfUri,
-                                         RestTemplate loadBalancedRestTemplate,
-                                         CircuitBreakerFactory circuitBreakerFactory) {
-        this.pdfGeneratorGenerateTicketPdfUri = pdfGeneratorGenerateTicketPdfUri;
-        this.loadBalancedRestTemplate = loadBalancedRestTemplate;
+    public PdfGeneratorClient(PdfGeneratorClientConfig pdfGeneratorClientConfig,
+                              RestTemplateBuilder loadBalancedRestTemplateBuilder,
+                              CircuitBreakerFactory circuitBreakerFactory) {
+        this.pdfGeneratorClientConfig = pdfGeneratorClientConfig;
+        this.loadBalancedRestTemplate = loadBalancedRestTemplateBuilder.build();
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
@@ -36,7 +37,7 @@ public class PdfGeneratorIntegrationClient {
         try {
             ResponseEntity<byte[]> responseEntity = circuitBreakerFactory
                     .create("pdf-generator")
-                    .run(() -> loadBalancedRestTemplate.postForEntity(pdfGeneratorGenerateTicketPdfUri, httpEntity, byte[].class));
+                    .run(() -> loadBalancedRestTemplate.postForEntity(pdfGeneratorClientConfig.getUrn(), httpEntity, byte[].class));
             if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
                 LOGGER.info("Pdf created " + ticketOrderDto.getTicketType().getTicketTypeObject());
                 return responseEntity;

@@ -1,6 +1,7 @@
 package net.ticket.client.bank;
 
 import lombok.SneakyThrows;
+import net.ticket.config.client.BankSimulatorClientConfig;
 import net.ticket.request.payment.PaymentRequest;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.InvalidBankAccount;
@@ -9,40 +10,49 @@ import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 
 
 @Service
-public class BankIntegrationClient {
+public class BankSimulatorClient {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(BankIntegrationClient.class);
-    private final String bankAccountUri;
-    private final String bankPaymentUri;
+    private final static Logger LOGGER = LoggerFactory.getLogger(BankSimulatorClient.class);
+    private final BankSimulatorClientConfig bankSimulatorClientConfig;
     private final RestTemplate restTemplate;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Autowired
-    public BankIntegrationClient(@Value("${service.bank.account.uri}") String bankAccountUri,
-                                 @Value("${service.bank.payment.uri}")String bankPaymentUri,
-                                 RestTemplate restTemplate,
-                                 CircuitBreakerFactory circuitBreakerFactory) {
-        this.bankAccountUri = bankAccountUri;
-        this.bankPaymentUri = bankPaymentUri;
-        this.restTemplate = restTemplate;
+    public BankSimulatorClient(BankSimulatorClientConfig bankSimulatorClientConfig,
+                               RestTemplateBuilder restTemplateBuilder,
+                               CircuitBreakerFactory circuitBreakerFactory) {
+        this.bankSimulatorClientConfig = bankSimulatorClientConfig;
+        this.restTemplate = restTemplateBuilder.build();
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
     public void sendConfirmationRequestToBankAccount(long bankAccount) throws NoSuchBankAccount, BankServerError, InvalidBankAccount {
-       String bankUri = String.format(bankAccountUri, bankAccount);
+       String bankUri = String.format(bankSimulatorClientConfig.getAccountUrl(), bankAccount);
        boolean response = circuitBreakerFactory
                .create("bank-simulator")
                .run(() -> restTemplate.getForEntity(bankUri, Boolean.class).getBody(),
                     throwable -> confirmationRequestFallback(throwable, bankAccount));
        if (response)
            LOGGER.info("Confirmation request is successful " + bankAccount);
+    }
+
+    public boolean performPaymentRequestToBank(PaymentRequest paymentRequest) throws NotEnoughAmountForPayment, BankServerError {
+        boolean response = circuitBreakerFactory
+                .create("bank-simulator")
+                .run(() -> restTemplate.postForEntity(bankSimulatorClientConfig.getPaymentUrl(), paymentRequest, Boolean.class).getBody(),
+                        throwable -> performPaymentRequestToBankFallback(throwable, paymentRequest));
+        if (response) {
+            LOGGER.info("Payment request is successful " + paymentRequest.getBankAccount());
+            return true;
+        }
+        throw new RuntimeException();
     }
 
     @SneakyThrows
@@ -62,18 +72,6 @@ public class BankIntegrationClient {
                     bankAccount + " " + throwable.getMessage());
         }
         throw new RuntimeException(throwable);
-    }
-
-    public boolean performPaymentRequestToBank(PaymentRequest paymentRequest) throws NotEnoughAmountForPayment, BankServerError {
-        boolean response = circuitBreakerFactory
-                .create("bank-simulator")
-                .run(() -> restTemplate.postForEntity(bankPaymentUri, paymentRequest, Boolean.class).getBody(),
-                        throwable -> performPaymentRequestToBankFallback(throwable, paymentRequest));
-        if (response) {
-            LOGGER.info("Payment request is successful " + paymentRequest.getBankAccount());
-            return true;
-        }
-        throw new RuntimeException();
     }
 
     @SneakyThrows

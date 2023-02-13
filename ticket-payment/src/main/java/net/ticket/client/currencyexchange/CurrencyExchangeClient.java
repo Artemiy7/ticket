@@ -1,11 +1,12 @@
 package net.ticket.client.currencyexchange;
 
-import net.ticket.client.pdfgenerator.PdfGeneratorIntegrationClient;
+import net.ticket.client.pdfgenerator.PdfGeneratorClient;
+import net.ticket.config.client.CurrencyExchangeClientConfig;
 import net.ticket.response.currencyexchange.CurrencyExchangeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,19 +17,19 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 
 @Service
-public class CurrencyExchangeIntegrationClient {
+public class CurrencyExchangeClient {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorIntegrationClient.class);
-    private final String exchangeCurrencyUrl;
+    private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorClient.class);
+    private final CurrencyExchangeClientConfig currencyExchangeClientConfig;
     private final RestTemplate loadBalancedRestTemplate;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     @Autowired
-    public CurrencyExchangeIntegrationClient(@Value("${currency-exchange.exchangeCurrency.url}") String exchangeCurrencyUrl,
-                                         RestTemplate loadBalancedRestTemplate,
-                                         CircuitBreakerFactory circuitBreakerFactory) {
-        this.exchangeCurrencyUrl = exchangeCurrencyUrl;
-        this.loadBalancedRestTemplate = loadBalancedRestTemplate;
+    public CurrencyExchangeClient(CurrencyExchangeClientConfig currencyExchangeClientConfig,
+                                  RestTemplateBuilder loadBalancedRestTemplateBuilder,
+                                  CircuitBreakerFactory circuitBreakerFactory) {
+        this.currencyExchangeClientConfig = currencyExchangeClientConfig;
+        this.loadBalancedRestTemplate = loadBalancedRestTemplateBuilder.build();
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
@@ -36,7 +37,7 @@ public class CurrencyExchangeIntegrationClient {
         try {
             ResponseEntity<CurrencyExchangeResponse> responseEntity = circuitBreakerFactory
                     .create("currency-exchange")
-                    .run(() -> loadBalancedRestTemplate.getForEntity(String.format(exchangeCurrencyUrl, currencyCodeFrom.toLowerCase(), currencyCodeTo.toLowerCase(), currencyAmount),
+                    .run(() -> loadBalancedRestTemplate.getForEntity(String.format(currencyExchangeClientConfig.getUrn(), currencyCodeFrom.toLowerCase(), currencyCodeTo.toLowerCase(), currencyAmount),
                             CurrencyExchangeResponse.class));
             if (responseEntity.getStatusCode().equals(HttpStatus.OK)) {
                 LOGGER.info("Currency exchanged from " + currencyCodeFrom + " to " + currencyCodeTo);
