@@ -12,5 +12,5 @@ public interface OccasionCost {
     }
     BigDecimal calculateTicketCost(OccasionSeatDto occasionSeatDto, BigDecimal initialCost) throws CorruptedOccasionSeatException;
 
-    BigDecimal getFieldValueByName(String fieldName) throws NoSuchFieldException, IllegalAccessException;
+    BigDecimal getSeatPlaceCoefficientBySeatPlaceTypeName(String fieldName) throws NoSuchFieldException, IllegalAccessException;
 }

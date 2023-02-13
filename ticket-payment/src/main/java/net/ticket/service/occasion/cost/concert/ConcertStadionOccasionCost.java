@@ -1,39 +1,21 @@
 package net.ticket.service.occasion.cost.concert;
 
-import lombok.Getter;
+import net.ticket.config.occasion.cost.concert.ConcertStadionOccasionCostConfig;
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.service.occasion.cost.OccasionCost;
 import net.ticket.ticketexception.occasion.CorruptedOccasionSeatException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Service
 public class ConcertStadionOccasionCost implements OccasionCost {
+    private final ConcertStadionOccasionCostConfig concertStadionOccasionCostConfig;
 
-    @Getter
-    private BigDecimal concertStadionVip;
-    @Getter
-    private BigDecimal concertStadionFan;
-    @Getter
-    private BigDecimal concertStadionSeating;
-    @Getter
-    private BigDecimal dateCoefficient;
-    @Getter
-    private BigDecimal seatCoefficient;
-
-    @Autowired
-    public ConcertStadionOccasionCost(@Value("${service.occasion-coefficient.concert.stadion.vip}") BigDecimal concertStadionVip,
-                                      @Value("${service.occasion-coefficient.concert.stadion.fan}") BigDecimal concertStadionFan,
-                                      @Value("${service.occasion-coefficient.concert.stadion.seating}") BigDecimal concertStadionSeating,
-                                      @Value("${service.occasion-coefficient.concert.stadion.date}") BigDecimal dateCoefficient,
-                                      @Value("${service.occasion-coefficient.concert.stadion.seat}") BigDecimal seatCoefficient) {
-        this.concertStadionVip = concertStadionVip;
-        this.concertStadionFan = concertStadionFan;
-        this.concertStadionSeating = concertStadionSeating;
-        this.dateCoefficient = dateCoefficient;
-        this.seatCoefficient = seatCoefficient;
+    public ConcertStadionOccasionCost(ConcertStadionOccasionCostConfig concertStadionOccasionCostConfig) {
+        this.concertStadionOccasionCostConfig = concertStadionOccasionCostConfig;
     }
 
     @Override
@@ -41,10 +23,10 @@ public class ConcertStadionOccasionCost implements OccasionCost {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNumberOfSeats())
                     .multiply(initialCost)
-                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(seatCoefficient, 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
-                    .divide(dateCoefficient, 2, RoundingMode.HALF_UP)
-                    .divide(dateCoefficient, 2, RoundingMode.HALF_UP)
-                    .divide(getFieldValueByName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
+                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(concertStadionOccasionCostConfig.getSeat(), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
+                    .divide(concertStadionOccasionCostConfig.getDate(), 2, RoundingMode.HALF_UP)
+                    .divide(concertStadionOccasionCostConfig.getDate(), 2, RoundingMode.HALF_UP)
+                    .divide(getSeatPlaceCoefficientBySeatPlaceTypeName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
             return bigDecimal;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new CorruptedOccasionSeatException(e.getMessage());
@@ -52,9 +34,9 @@ public class ConcertStadionOccasionCost implements OccasionCost {
     }
 
     @Override
-    public BigDecimal getFieldValueByName(String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        return (BigDecimal) this.getClass()
-                .getDeclaredField(fieldName)
-                .get(this);
+    public BigDecimal getSeatPlaceCoefficientBySeatPlaceTypeName(String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field field = concertStadionOccasionCostConfig.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return (BigDecimal) field.get(concertStadionOccasionCostConfig);
     }
 }

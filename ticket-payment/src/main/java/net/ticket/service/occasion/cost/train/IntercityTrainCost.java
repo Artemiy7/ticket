@@ -1,35 +1,22 @@
 package net.ticket.service.occasion.cost.train;
 
-import lombok.Getter;
+import net.ticket.config.occasion.cost.train.IntercityTrainCostConfig;
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.service.occasion.cost.OccasionCost;
 import net.ticket.ticketexception.occasion.CorruptedOccasionSeatException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+@Service
 public class IntercityTrainCost implements OccasionCost {
 
-    @Getter
-    private BigDecimal trainIntercityBusiness;
-    @Getter
-    private BigDecimal trainIntercityEconomic;
-    @Getter
-    private BigDecimal dateCoefficient;
-    @Getter
-    private BigDecimal seatCoefficient;
+    private final IntercityTrainCostConfig intercityTrainCostConfig;
 
-    @Autowired
-    public IntercityTrainCost(@Value("${service.occasion-coefficient.train.intercity.business}") BigDecimal trainIntercityBusiness,
-                                   @Value("${service.occasion-coefficient.train.intercity.economic}") BigDecimal trainIntercityEconomic,
-                                   @Value("${service.occasion-coefficient.train.intercity.date}") BigDecimal dateCoefficient,
-                                   @Value("${service.occasion-coefficient.train.intercity.seat}") BigDecimal seatCoefficient) {
-        this.trainIntercityBusiness = trainIntercityBusiness;
-        this.trainIntercityEconomic = trainIntercityEconomic;
-        this.dateCoefficient = dateCoefficient;
-        this.seatCoefficient = seatCoefficient;
+    public IntercityTrainCost(IntercityTrainCostConfig intercityTrainCostConfig) {
+        this.intercityTrainCostConfig = intercityTrainCostConfig;
     }
 
     @Override
@@ -37,8 +24,8 @@ public class IntercityTrainCost implements OccasionCost {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNumberOfSeats())
                     .multiply(initialCost)
-                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(seatCoefficient, 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
-                    .divide(getFieldValueByName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
+                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(intercityTrainCostConfig.getSeat(), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
+                    .divide(getSeatPlaceCoefficientBySeatPlaceTypeName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
             return bigDecimal;
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new CorruptedOccasionSeatException(e.getMessage());
@@ -46,9 +33,9 @@ public class IntercityTrainCost implements OccasionCost {
     }
 
     @Override
-    public BigDecimal getFieldValueByName(String fieldName) throws NoSuchFieldException, IllegalAccessException {
-        return (BigDecimal) this.getClass()
-                .getDeclaredField(fieldName)
-                .get(this);
+    public BigDecimal getSeatPlaceCoefficientBySeatPlaceTypeName(String fieldName) throws NoSuchFieldException, IllegalAccessException {
+        Field field = intercityTrainCostConfig.getClass().getDeclaredField(fieldName);
+        field.setAccessible(true);
+        return (BigDecimal) field.get(intercityTrainCostConfig);
     }
 }
