@@ -1,7 +1,7 @@
 package net.ticket.client.bank;
 
 import lombok.SneakyThrows;
-import net.ticket.config.client.BankSimulatorClientConfig;
+import net.ticket.config.web.client.BankSimulatorClientConfig;
 import net.ticket.request.payment.PaymentRequest;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.InvalidBankAccount;
@@ -26,10 +26,10 @@ public class BankSimulatorClient {
 
     @Autowired
     public BankSimulatorClient(BankSimulatorClientConfig bankSimulatorClientConfig,
-                               RestTemplateBuilder restTemplateBuilder,
+                               RestTemplate restTemplate,
                                CircuitBreakerFactory circuitBreakerFactory) {
         this.bankSimulatorClientConfig = bankSimulatorClientConfig;
-        this.restTemplate = restTemplateBuilder.build();
+        this.restTemplate = restTemplate;
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
 

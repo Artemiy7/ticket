@@ -1,12 +1,13 @@
 package net.ticket.client.pdfgenerator;
 
-import net.ticket.config.client.PdfGeneratorClientConfig;
+import net.ticket.config.web.client.PdfGeneratorClientConfig;
 import net.ticket.dto.ticketorder.TicketOrderDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,17 +18,17 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class PdfGeneratorClient {
+
     private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorClient.class);
     private final PdfGeneratorClientConfig pdfGeneratorClientConfig;
     private final RestTemplate loadBalancedRestTemplate;
     private final CircuitBreakerFactory circuitBreakerFactory;
 
-    @Autowired
     public PdfGeneratorClient(PdfGeneratorClientConfig pdfGeneratorClientConfig,
-                              RestTemplateBuilder loadBalancedRestTemplateBuilder,
+                              RestTemplate loadBalancedRestTemplate,
                               CircuitBreakerFactory circuitBreakerFactory) {
         this.pdfGeneratorClientConfig = pdfGeneratorClientConfig;
-        this.loadBalancedRestTemplate = loadBalancedRestTemplateBuilder.build();
+        this.loadBalancedRestTemplate = loadBalancedRestTemplate;
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
 

@@ -1,13 +1,14 @@
 package net.ticket.client.currencyexchange;
 
 import net.ticket.client.pdfgenerator.PdfGeneratorClient;
-import net.ticket.config.client.CurrencyExchangeClientConfig;
+import net.ticket.config.web.client.CurrencyExchangeClientConfig;
 import net.ticket.response.currencyexchange.CurrencyExchangeResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,10 +27,10 @@ public class CurrencyExchangeClient {
 
     @Autowired
     public CurrencyExchangeClient(CurrencyExchangeClientConfig currencyExchangeClientConfig,
-                                  RestTemplateBuilder loadBalancedRestTemplateBuilder,
+                                  RestTemplate loadBalancedRestTemplate,
                                   CircuitBreakerFactory circuitBreakerFactory) {
         this.currencyExchangeClientConfig = currencyExchangeClientConfig;
-        this.loadBalancedRestTemplate = loadBalancedRestTemplateBuilder.build();
+        this.loadBalancedRestTemplate = loadBalancedRestTemplate;
         this.circuitBreakerFactory = circuitBreakerFactory;
     }
 
