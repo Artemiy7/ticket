@@ -1,4 +1,4 @@
-package net.ticket.swagger;
+package net.ticket.config.swagger;
 
 import io.swagger.annotations.Api;
 import org.springframework.context.annotation.Bean;
