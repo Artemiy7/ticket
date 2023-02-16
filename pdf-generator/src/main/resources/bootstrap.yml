@@ -1,6 +1,9 @@
 spring:
     application:
       name: pdf-generator
+    profiles:
+      active: local
     cloud:
       config:
         uri: http://localhost:8888
+        label: master

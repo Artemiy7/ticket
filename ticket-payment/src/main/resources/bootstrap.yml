@@ -1,9 +1,12 @@
 spring:
   application:
     name: ticket-payment
+  profiles:
+    active: local
   cloud:
     config:
       uri: http://localhost:8888
+      label: master
 resilience4j:
   circuitbreaker:
     instances:
