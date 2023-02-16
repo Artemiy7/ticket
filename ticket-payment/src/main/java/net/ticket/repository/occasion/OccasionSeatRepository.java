@@ -29,15 +29,6 @@ public class OccasionSeatRepository {
             }
     }
 
-    public Optional<OccasionSeatEntity> finddOccasionSeats(OccasionEntity occasionEntity, CustomerTicketDto customerTicketDto) throws NoResultException {
-        Query query = entityManager.createNativeQuery("SELECT * FROM OccasionSeat os WHERE" +
-                " AND os.OccasionId=:OccasionId" +
-                " AND os.Seat=:Seat", OccasionSeatEntity.class);
-        query.setParameter("OccasionId", occasionEntity.getOccasionId());
-        query.setParameter("Seat", customerTicketDto.getSeat());
-        return Optional.ofNullable((OccasionSeatEntity) query.getSingleResult());
-    }
-
     public void updateOccasionSeatIsBooked(OccasionEntity occasionEntity, CustomerTicketDto customerTicketDto) {
         Query query = entityManager.createNativeQuery("UPDATE OccasionSeat os SET os.IsBooked = true" +
                 " WHERE os.OccasionId=:OccasionId" +
