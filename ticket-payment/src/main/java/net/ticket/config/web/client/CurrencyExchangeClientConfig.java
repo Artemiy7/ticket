@@ -1,4 +1,4 @@
-package net.ticket.config.client;
+package net.ticket.config.web.client;
 
 import lombok.Getter;
 import lombok.Setter;

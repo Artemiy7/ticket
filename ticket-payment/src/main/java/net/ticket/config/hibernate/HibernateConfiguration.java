@@ -1,4 +1,4 @@
-package net.ticket.hibernateconfig;
+package net.ticket.config.hibernate;
 
 import java.util.Properties;
 
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 public class HibernateConfiguration {
+
     @Value("${spring.db.driver}")
     private String DRIVER;
 

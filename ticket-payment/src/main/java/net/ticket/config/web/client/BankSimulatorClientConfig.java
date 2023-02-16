@@ -1,4 +1,4 @@
-package net.ticket.config.client;
+package net.ticket.config.web.client;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 @Component
-@ConfigurationProperties(prefix = "service.pdf-generator.generate-ticket-pdf")
-public class PdfGeneratorClientConfig {
-    String urn;
+@ConfigurationProperties(prefix = "service.bank.url")
+public class BankSimulatorClientConfig {
+    String accountUrl;
+    String paymentUrl;
 }

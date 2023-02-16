@@ -19,7 +19,7 @@ import java.util.Set;
 @Table(name = "Occasion")
 public class OccasionEntity implements Comparable<OccasionEntity>, Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "OccasionId")
     private long occasionId;
 

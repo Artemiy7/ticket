@@ -15,7 +15,6 @@ import net.ticket.ticketexception.bank.NoSuchBankAccount;
 import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
@@ -29,7 +28,6 @@ public class TicketOrderRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TicketOrderRestController.class);
     private final TicketOrderService ticketOrderService;
 
-    @Autowired
     public TicketOrderRestController(TicketOrderService ticketOrderService) {
         this.ticketOrderService = ticketOrderService;
     }
@@ -85,7 +83,7 @@ public class TicketOrderRestController {
 
     @ApiOperation("Get pdf ticket for every CustomerTicketDto")
     @RequestMapping(value = "/PDF/{orderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> getTicketOrder(@PathVariable long orderId) throws HttpServerErrorException {
+    public ResponseEntity<byte[]> printTicketOrder(@PathVariable long orderId) throws HttpServerErrorException {
         HttpHeaders headers = new HttpHeaders();
         try {
             ResponseEntity<byte[]> responseEntity = ticketOrderService.generatePdf(orderId);

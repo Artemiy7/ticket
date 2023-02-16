@@ -11,7 +11,6 @@ import net.ticket.ticketexception.occasion.CorruptedOccasionSeatException;
 import net.ticket.ticketexception.occasion.OccasionOutdatedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ public class OccasionController {
     private final static Logger LOGGER = LoggerFactory.getLogger(OccasionController.class);
     private final OccasionService occasionService;
 
-    @Autowired
     public OccasionController(OccasionService occasionService) {
         this.occasionService = occasionService;
     }
