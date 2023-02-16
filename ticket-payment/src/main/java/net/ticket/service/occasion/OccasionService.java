@@ -11,8 +11,8 @@ import net.ticket.service.occasion.cost.OccasionCost;
 import net.ticket.ticketexception.occasion.CorruptedOccasionException;
 import net.ticket.ticketexception.occasion.CorruptedOccasionSeatException;
 import net.ticket.ticketexception.occasion.OccasionOutdatedException;
-import net.ticket.transformers.OccasionEntityToOccasionDtoNoSeatsTransformer;
-import net.ticket.transformers.OccasionEntityToOccasionDtoTransformer;
+import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoNoSeatsTransformer;
+import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,5 +118,24 @@ public class OccasionService {
                                                                          .setNotBookedSeats(occasionRepository.findNotBookedSeatForOccasion(occasionEntity))
                                                                          .setDaysToOccasion(calculateDaysToOccasion(occasionEntity.getOccasionTime())))
                         .collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public void saveOccasionList(List<OccasionEntity> occasionEntityList) {
+        for (OccasionEntity occasionEntity : occasionEntityList) {
+            if (occasionRepository.findOccasionByNameAndDateAndAddress(occasionEntity).isEmpty()) {
+                occasionRepository.persistOccasion(occasionEntity);
+                LOGGER.info("Occasion saved " + occasionEntity.getOccasionName() + " " + occasionEntity.getOccasionAddress() +
+                        " " + occasionEntity.getOccasionTime() + " " + occasionEntity.getTicketType());
+            } else {
+                LOGGER.info("Occasion already exist in database" + occasionEntity.getOccasionName() + " " + occasionEntity.getOccasionAddress() +
+                        " " + occasionEntity.getOccasionTime() + " " + occasionEntity.getTicketType());
+            }
+        }
+    }
+
+    @Transactional
+    public void setOutdatedOccasionNotActiveByCurrentDate() {
+        occasionRepository.setOutdatedOccasionNotActive(LocalDateTime.now());
     }
 }
