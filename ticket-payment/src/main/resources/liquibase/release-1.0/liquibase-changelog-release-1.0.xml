@@ -3,5 +3,7 @@
     <include file="src/main/resources/liquibase/release-1.0/create/create-occasion-table-release-1.0.xml"/>
     <include file="src/main/resources/liquibase/release-1.0/create/create-ticketOrder-table-release-1.0.xml"/>
     <include file="src/main/resources/liquibase/release-1.0/create/create-occasionSeat-table-release-1.0.xml"/>
+    <include file="src/main/resources/liquibase/release-1.0/create/create-schedulerLock-table-release-1.0.xml"/>
+    <include file="src/main/resources/liquibase/release-1.0/create/create-schedulerLockLog-table-release-1.0.xml"/>
     <include file="src/main/resources/liquibase/release-1.0/create/create-customerTicket-table-release-1.0.xml"/>
 </databaseChangeLog>

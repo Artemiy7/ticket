@@ -11,7 +11,7 @@
             <column name="Seat" type="INT">
                 <constraints nullable="false"/>
             </column>
-            <column name="SeatPlaceType" type="VARCHAR(20)">
+            <column name="SeatPlaceType" type="VARCHAR(70)">
                 <constraints nullable="false"/>
             </column>
             <column defaultValueNumeric="0" name="IsBooked" type="BIT(1)">
