@@ -9,9 +9,9 @@ import net.ticket.dto.ticketorder.CustomerTicketDto;
 import net.ticket.dto.ticketorder.TicketOrderDto;
 import net.ticket.entity.occasion.OccasionEntity;
 import net.ticket.response.currencyexchange.CurrencyExchangeResponse;
-import net.ticket.client.bank.BankIntegrationClient;
-import net.ticket.client.currencyexchange.CurrencyExchangeIntegrationClient;
-import net.ticket.client.pdfgenerator.PdfGeneratorIntegrationClient;
+import net.ticket.client.bank.BankSimulatorClient;
+import net.ticket.client.currencyexchange.CurrencyExchangeClient;
+import net.ticket.client.pdfgenerator.PdfGeneratorClient;
 import net.ticket.ticketexception.bank.InvalidBankAccount;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionSeatException;
@@ -20,8 +20,8 @@ import net.ticket.ticketexception.occasion.OccasionSeatIsBookedException;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.NoSuchBankAccount;
 import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
-import net.ticket.transformers.TicketOrderDtoToTicketOrderEntityTransformer;
-import net.ticket.transformers.TicketOrderEntityToTicketOrderDtoTransformer;
+import net.ticket.transformer.ticketorder.TicketOrderDtoToTicketOrderEntityTransformer;
+import net.ticket.transformer.ticketorder.TicketOrderEntityToTicketOrderDtoTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +43,9 @@ public class TicketOrderService {
     private final OccasionSeatRepository occasionSeatRepository;
     private final TicketOrderEntityToTicketOrderDtoTransformer ticketOrderEntityToTicketOrderDtoTransformer;
     private final TicketOrderDtoToTicketOrderEntityTransformer ticketOrderDtoToTicketOrderEntityTransformer;
-    private final PdfGeneratorIntegrationClient pdfGeneratorIntegrationClient;
-    private final BankIntegrationClient bankIntegrationClient;
-    private final CurrencyExchangeIntegrationClient currencyExchangeIntegrationClient;
+    private final PdfGeneratorClient pdfGeneratorClient;
+    private final BankSimulatorClient bankSimulatorClient;
+    private final CurrencyExchangeClient currencyExchangeClient;
     private final PaymentRequestService paymentRequestService;
     @Autowired
     public TicketOrderService(@Value("${service.default-currency}") String defaultCurrency,
@@ -54,9 +54,9 @@ public class TicketOrderService {
                               OccasionSeatRepository occasionSeatRepository,
                               TicketOrderEntityToTicketOrderDtoTransformer ticketOrderEntityToTicketOrderDtoTransformer,
                               TicketOrderDtoToTicketOrderEntityTransformer ticketOrderDtoToTicketOrderEntityTransformer,
-                              BankIntegrationClient bankIntegrationClient,
-                              CurrencyExchangeIntegrationClient currencyExchangeIntegrationClient,
-                              PdfGeneratorIntegrationClient pdfGeneratorIntegrationClient,
+                              BankSimulatorClient bankSimulatorClient,
+                              CurrencyExchangeClient currencyExchangeClient,
+                              PdfGeneratorClient pdfGeneratorClient,
                               PaymentRequestService paymentRequestService) {
         this.defaultCurrency = defaultCurrency;
         this.ticketOrderRepository = ticketOrderRepository;
@@ -64,16 +64,16 @@ public class TicketOrderService {
         this.occasionSeatRepository = occasionSeatRepository;
         this.ticketOrderEntityToTicketOrderDtoTransformer = ticketOrderEntityToTicketOrderDtoTransformer;
         this.ticketOrderDtoToTicketOrderEntityTransformer = ticketOrderDtoToTicketOrderEntityTransformer;
-        this.bankIntegrationClient = bankIntegrationClient;
-        this.currencyExchangeIntegrationClient = currencyExchangeIntegrationClient;
-        this.pdfGeneratorIntegrationClient = pdfGeneratorIntegrationClient;
+        this.bankSimulatorClient = bankSimulatorClient;
+        this.currencyExchangeClient = currencyExchangeClient;
+        this.pdfGeneratorClient = pdfGeneratorClient;
         this.paymentRequestService = paymentRequestService;
     }
 
     @Transactional(rollbackFor = Exception.class)
     public long createTicket(TicketOrderDto ticketOrderDto) throws NoResultException, NoSuchOccasionException,
             OccasionSeatIsBookedException, NoSuchBankAccount, BankServerError, NotEnoughAmountForPayment, NoSuchOccasionSeatException, InvalidBankAccount {
-        Optional<OccasionEntity> occasionEntityOptional = occasionRepository.findOccasionByNameAndDate(ticketOrderDto);
+        Optional<OccasionEntity> occasionEntityOptional = occasionRepository.findOccasionByNameAndDateAndAddress(ticketOrderDto);
         if (occasionEntityOptional.isEmpty())
             throw new NoSuchOccasionException("No such Occasion " + ticketOrderDto.getOccasionName());
 
@@ -86,7 +86,7 @@ public class TicketOrderService {
                 throw new OccasionSeatIsBookedException("OccasionSeat is booked " + occasionSeatEntity.getOccasionSeatId());
             customerTicketDto.setOccasionSeat(occasionSeatEntity);
         }
-        bankIntegrationClient.sendConfirmationRequestToBankAccount(ticketOrderDto.getBankAccount());
+        bankSimulatorClient.sendConfirmationRequestToBankAccount(ticketOrderDto.getBankAccount());
 
         TicketOrderEntity ticketOrderEntity = ticketOrderDtoToTicketOrderEntityTransformer.transform(ticketOrderDto);
         ticketOrderRepository.saveTicketOrder(ticketOrderEntity);
@@ -97,7 +97,7 @@ public class TicketOrderService {
                 .forEach(customerDto -> {
                     if (!ticketOrderDto.getCurrency().equals(defaultCurrency)) {
                         CurrencyExchangeResponse currencyExchangeResponse =
-                                currencyExchangeIntegrationClient.sendRequestToCurrencyExchange(ticketOrderDto.getCurrency(),
+                                currencyExchangeClient.sendRequestToCurrencyExchange(ticketOrderDto.getCurrency(),
                                         defaultCurrency, customerDto.getAmount());
                         customerDto.setAmount(currencyExchangeResponse.getAmount());
                     }
@@ -106,7 +106,7 @@ public class TicketOrderService {
                             " OccasionId " + customerDto.getOccasionSeat().getOccasionSeatId());
                 });
 
-        if (bankIntegrationClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
+        if (bankSimulatorClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
             ticketOrderEntity.setPaid(true);
 
         LOGGER.info("TicketOrder created successfully, bankAccount: " + ticketOrderEntity.getBankAccount() +
@@ -121,6 +121,6 @@ public class TicketOrderService {
         TicketOrderEntity ticketOrderEntity = ticketOrderRepository.findTicketOrder(ticketOrderId)
                                                                    .orElseThrow(() -> new NoSuchTicketOrderEntityException("No such TicketOrder " + ticketOrderId));
         TicketOrderDto ticketOrderDto = ticketOrderEntityToTicketOrderDtoTransformer.transform(ticketOrderEntity);
-        return pdfGeneratorIntegrationClient.performRequestToPdfGeneratorService(ticketOrderDto);
+        return pdfGeneratorClient.performRequestToPdfGeneratorService(ticketOrderDto);
     }
 }
