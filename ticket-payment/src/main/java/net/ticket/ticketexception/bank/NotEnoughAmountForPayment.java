@@ -1,6 +1,6 @@
 package net.ticket.ticketexception.bank;
 
-public class NotEnoughAmountForPayment extends Exception {
+public class NotEnoughAmountForPayment extends RuntimeException {
     public NotEnoughAmountForPayment(String message) {
         super(message);
     }
