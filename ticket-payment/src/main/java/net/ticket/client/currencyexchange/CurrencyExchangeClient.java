@@ -20,7 +20,7 @@ import java.math.BigDecimal;
 @Service
 public class CurrencyExchangeClient {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(PdfGeneratorClient.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(CurrencyExchangeClient.class);
     private final CurrencyExchangeClientConfig currencyExchangeClientConfig;
     private final RestTemplate loadBalancedRestTemplate;
     private final CircuitBreakerFactory circuitBreakerFactory;
