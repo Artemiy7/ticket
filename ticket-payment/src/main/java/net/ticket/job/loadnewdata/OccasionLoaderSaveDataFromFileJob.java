@@ -10,23 +10,23 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OccasionLoaderJob {
-    private final static Logger LOGGER = LoggerFactory.getLogger(OccasionLoaderJob.class);
+public class OccasionLoaderSaveDataFromFileJob {
+    private final static Logger LOGGER = LoggerFactory.getLogger(OccasionLoaderSaveDataFromFileJob.class);
     private static int count = 0;
     private final String instanceId;
     private final ScheduledJobRepository scheduledJobRepository;
     private final InitialDataLoaderFacade initialDataLoaderFacade;
 
-    public OccasionLoaderJob(@Value("${eureka.instance.metadataMap.instanceId}")String instanceId,
-                             ScheduledJobRepository scheduledJobRepository,
-                             InitialDataLoaderFacade initialDataLoaderFacade) {
+    public OccasionLoaderSaveDataFromFileJob(@Value("${eureka.instance.metadataMap.instanceId}")String instanceId,
+                                             ScheduledJobRepository scheduledJobRepository,
+                                             InitialDataLoaderFacade initialDataLoaderFacade) {
         this.instanceId = instanceId;
         this.scheduledJobRepository = scheduledJobRepository;
         this.initialDataLoaderFacade = initialDataLoaderFacade;
     }
 
-    @Scheduled(cron = "${service.jobs.occasionLoaderJob.occasionLoaderSaveInitialDataJob}")
-    @SchedulerLock(name = "OccasionLoaderSaveInitialDataJob")
+    @Scheduled(cron = "${service.jobs.occasionLoader.occasionLoaderSaveDataFromFileJob.execution-time}")
+    @SchedulerLock(name = "OccasionLoaderSaveDataFromFileJob")
     public void job() {
         try {
             initialDataLoaderFacade.loadInitialDataAndSave();

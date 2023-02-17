@@ -10,23 +10,23 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OccasionOutdatedDataDeleteJob {
-    private final static Logger LOGGER = LoggerFactory.getLogger(OccasionOutdatedDataSetNotActiveJob.class);
-    private final String instanceId;
+public class OccasionSetNotActiveOutdatedDataJob {
+    private final static Logger LOGGER = LoggerFactory.getLogger(OccasionSetNotActiveOutdatedDataJob.class);
     private static int count = 0;
+    private final String instanceId;
     private final ScheduledJobRepository scheduledJobRepository;
     private final OccasionService occasionService;
 
-    public OccasionOutdatedDataDeleteJob(@Value("${eureka.instance.metadataMap.instanceId}") String instanceId,
-                                         ScheduledJobRepository scheduledJobRepository,
-                                         OccasionService occasionService) {
+    public OccasionSetNotActiveOutdatedDataJob(@Value("${eureka.instance.metadataMap.instanceId}") String instanceId,
+                                               ScheduledJobRepository scheduledJobRepository,
+                                               OccasionService occasionService) {
         this.instanceId = instanceId;
         this.scheduledJobRepository = scheduledJobRepository;
         this.occasionService = occasionService;
     }
 
-    @Scheduled(cron = "${service.jobs.occasionLoaderJob.occasionOutdatedDataDeleteJob}")
-    @SchedulerLock(name = "OccasionOutdatedDataDeleteJob")
+    @Scheduled(cron = "${service.jobs.occasionLoader.occasionSetNotActiveOutdatedDataJob.execution-time}")
+    @SchedulerLock(name = "OccasionSetNotActiveOutdatedDataJob")
     public void job() {
         try {
             occasionService.setOutdatedOccasionNotActiveByCurrentDate();
