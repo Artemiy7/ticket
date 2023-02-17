@@ -12,8 +12,8 @@ import java.util.TimeZone;
 @EnableConfigServer
 @SpringBootApplication
 public class ConfigServerApplication {
-//    @Value("${server.timeZone}")
-    private String timeZone = "UTC";
+    @Value("${server.timeZone}")
+    private String timeZone;
     @PostConstruct
     public void init() {
         TimeZone.setDefault(TimeZone.getTimeZone(timeZone));
