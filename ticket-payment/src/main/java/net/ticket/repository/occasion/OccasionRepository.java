@@ -34,18 +34,22 @@ public class OccasionRepository {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<OccasionEntity> criteria = builder.createQuery(OccasionEntity.class);
         Root<OccasionEntity> root = criteria.from(OccasionEntity.class);
-        List<Predicate> restrictions = new ArrayList<>();
+        List<Predicate> filterRestrictions = new ArrayList<>();
+        List<String> list = new ArrayList<>();
 
         for (Map.Entry<OccasionFilter, List<String>> entry : occasionFilterMap.entrySet()) {
-            entry.getValue().forEach(l -> restrictions.add(entry.getKey().filterOccasion(root, criteria, builder, l))
-            );
+            if (entry.getValue().size() > 1) {
+                List<Predicate> sameTypePredicatesList = new ArrayList<>();
+                entry.getValue().forEach(value -> {
+                    sameTypePredicatesList.add(entry.getKey().filterOccasion(root, criteria, builder, value));
+                });
+                filterRestrictions.add(builder.or(sameTypePredicatesList.toArray(new Predicate[sameTypePredicatesList.size()])));
+            } else {
+                filterRestrictions.add(builder.and(entry.getKey().filterOccasion(root, criteria, builder, entry.getValue().get(0))));
+            }
         }
-
-        criteria.where(restrictions.toArray(new Predicate[restrictions.size()]));
+        criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
         TypedQuery<OccasionEntity> query = entityManager.createQuery(criteria);
-        query.setFirstResult(resultOrder);
-        query.setMaxResults(size);
-
         return Optional.ofNullable(query.getResultList());
     }
 
