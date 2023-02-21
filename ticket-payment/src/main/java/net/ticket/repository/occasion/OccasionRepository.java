@@ -35,7 +35,6 @@ public class OccasionRepository {
         CriteriaQuery<OccasionEntity> criteria = builder.createQuery(OccasionEntity.class);
         Root<OccasionEntity> root = criteria.from(OccasionEntity.class);
         List<Predicate> filterRestrictions = new ArrayList<>();
-        List<String> list = new ArrayList<>();
 
         for (Map.Entry<OccasionFilter, List<String>> entry : occasionFilterMap.entrySet()) {
             if (entry.getValue().size() > 1) {
@@ -50,7 +49,14 @@ public class OccasionRepository {
         }
         criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
         TypedQuery<OccasionEntity> query = entityManager.createQuery(criteria);
-        return Optional.ofNullable(query.getResultList());
+        query.setFirstResult(resultOrder);
+        query.setMaxResults(size);
+
+        List<OccasionEntity> resultList = query.getResultList();
+        if (resultList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(query.getResultList());
     }
 
     public Optional<OccasionEntity> findOccasionByNameAndDateAndAddress(TicketOrderDto ticketOrderDto) {

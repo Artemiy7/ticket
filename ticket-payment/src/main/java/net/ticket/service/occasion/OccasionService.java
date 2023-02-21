@@ -6,11 +6,9 @@ import net.ticket.repository.occasion.filter.OccasionFilter;
 import net.ticket.dto.occasion.OccasionDto;
 import net.ticket.request.pagination.PaginationRequest;
 import net.ticket.entity.occasion.OccasionEntity;
-import net.ticket.enums.filtertype.OccasionFilterType;
+import net.ticket.constant.enums.filtertype.OccasionFilterType;
 import net.ticket.service.occasion.cost.OccasionCost;
-import net.ticket.ticketexception.occasion.CorruptedOccasionException;
-import net.ticket.ticketexception.occasion.CorruptedOccasionSeatException;
-import net.ticket.ticketexception.occasion.OccasionOutdatedException;
+import net.ticket.ticketexception.occasion.*;
 import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoNoSeatsTransformer;
 import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoTransformer;
 import org.slf4j.Logger;
@@ -41,11 +39,11 @@ public class OccasionService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<OccasionDto> findOccasionWithOccasionSeats(long id) throws CorruptedOccasionException, OccasionOutdatedException, CorruptedOccasionSeatException {
+    public Optional<OccasionDto> findOccasionWithOccasionSeats(long id) throws CorruptedOccasionException, OccasionOutdatedException, CorruptedOccasionSeatException, NoSuchOccasionException {
         Optional<OccasionEntity> occasionEntityOptional = occasionRepository.getOccasionById(id);
         if (occasionEntityOptional.isEmpty() || occasionEntityOptional.get().getOccasionSeatEntitySet().size() == 0) {
             LOGGER.info("No such OccasionEntity " + id);
-            return Optional.empty();
+            throw new NoSuchOccasionException("No such OccasionEntity " + id);
         }
         OccasionEntity occasionEntity = occasionEntityOptional.get();
         checkOccasionEntity(occasionEntity);
@@ -78,7 +76,7 @@ public class OccasionService {
     }
 
     private void checkOccasionEntity(OccasionEntity occasionEntity) throws OccasionOutdatedException, CorruptedOccasionException {
-        if (LocalDateTime.now().isAfter(occasionEntity.getOccasionTime())) {
+        if (LocalDateTime.now().isAfter(occasionEntity.getOccasionTime().plusMinutes(30))) {
             LOGGER.error("Occasion is before current date " + occasionEntity.getOccasionId());
             throw new OccasionOutdatedException(occasionEntity.getOccasionName().concat(" is before current date"));
         }
@@ -94,17 +92,21 @@ public class OccasionService {
 
         for (Map.Entry<String,List<String>> entry : filterMap.entrySet()) {
             OccasionFilter occasionFilter = OccasionFilter.getBeanByName(OccasionFilterType.valueOf(entry.getKey()).getFilterType());
-            if (occasionFilter.getIsRange() && entry.getValue().size() > 1)
-                throw new RuntimeException("Double same type FROM/TO request");
+            if (occasionFilter.getIsRange() && entry.getValue().size() > 1) {
+                LOGGER.error("Double same type FROM/TO request ");
+                throw new OccasionFilterException("Double same type FROM/TO request");
+            }
             occasionFilterMap.put(occasionFilter, entry.getValue());
         }
 
         Optional<List<OccasionEntity>> occasionEntityListOptional = occasionRepository.findOccasionsByFilter(occasionFilterMap, paginationRequest.getSize(), paginationRequest.getResultOrder());
 
-        if (occasionEntityListOptional.isEmpty()) {
-            LOGGER.info("No OccasionEntity was found by filter");
-            return Optional.empty();
+        if (occasionEntityListOptional.isEmpty() || occasionEntityListOptional.get().isEmpty()) {
+            LOGGER.error("No OccasionEntity was found by filter");
+            throw new NoSuchOccasionException("No such OccasionEntity");
         }
+
+        occasionEntityListOptional.get().forEach(this::checkOccasionEntity);
 
         if (paginationRequest.getSortingOrder() == PaginationRequest.SortingOrder.DESC)
             Collections.sort(occasionEntityListOptional.get(), Collections.reverseOrder());
