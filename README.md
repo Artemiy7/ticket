@@ -1,5 +1,4 @@
-SFG Beer Works - Brewery Client
-#Ticket application to create pdf ticket with Qr-code from TicketOrder.
+Ticket application to create pdf ticket with Qr-code from TicketOrder.
 Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.
 
 
