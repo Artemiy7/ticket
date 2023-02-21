@@ -47,7 +47,7 @@ public class OccasionRepository {
                 filterRestrictions.add(builder.and(entry.getKey().filterOccasion(root, criteria, builder, entry.getValue().get(0))));
             }
         }
-        criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
+         criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
         TypedQuery<OccasionEntity> query = entityManager.createQuery(criteria);
         query.setFirstResult(resultOrder);
         query.setMaxResults(size);
@@ -56,7 +56,7 @@ public class OccasionRepository {
         if (resultList.isEmpty()) {
             return Optional.empty();
         }
-        return Optional.of(query.getResultList());
+        return Optional.of(resultList);
     }
 
     public Optional<OccasionEntity> findOccasionByNameAndDateAndAddress(TicketOrderDto ticketOrderDto) {
