@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 
 @ControllerAdvice(basePackageClasses = {OccasionController.class, TicketOrderRestController.class})
 public class TicketPaymentOccasionHandler {
+
     @ExceptionHandler({NoSuchOccasionException.class})
     public ResponseEntity<ErrorResponse> handleNoSuchOccasionException(NoSuchOccasionException noSuchOccasionException, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
