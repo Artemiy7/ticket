@@ -60,7 +60,7 @@ POST localhost:8084/ticket/save
 Get pdf tiket from ticket-order example:
 GET localhost:8084/ticket/PDF/3000000001
 
-Generated result:
+Generated result from TicketOrderDto where for every CustomerTicketDto printed pdf-ticket:
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
