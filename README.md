@@ -23,16 +23,20 @@ Get occasion:
 GET localhost:8084/occasion/getOccasionById/1000000001
 
 
+
 Fetch available filters
 GET localhost:8084/fetchOccasionFilters
+
 
 
 Filter occasion example:
 GET localhost:8084/occasion/filterOccasion?TICKET_TYPE=CONCERT_CLUB&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=1000
 
 
+
 Ticket-order creation example:
 POST localhost:8084/ticket/save
+
 
 {
     "customerTicketDto": [{
@@ -52,8 +56,8 @@ POST localhost:8084/ticket/save
 }
 
 
-Get pdf tiket from ticket-order example:
 
+Get pdf tiket from ticket-order example:
 GET localhost:8084/ticket/PDF/3000000001
 
 Generated result:
