@@ -2,7 +2,7 @@ package net.ticket.transformer.occasion.occasionseat;
 
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.entity.occasion.OccasionSeatEntity;
-import net.ticket.enums.ticket.SeatPlaceType;
+import net.ticket.constant.enums.ticket.SeatPlaceType;
 import net.ticket.transformer.Transformer;
 import org.springframework.stereotype.Component;
 

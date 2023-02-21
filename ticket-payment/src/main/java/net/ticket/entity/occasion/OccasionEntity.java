@@ -1,7 +1,7 @@
 package net.ticket.entity.occasion;
 
 import lombok.*;
-import net.ticket.enums.ticket.TicketType;
+import net.ticket.constant.enums.ticket.TicketType;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;

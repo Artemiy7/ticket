@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import net.ticket.entity.occasion.OccasionSeatEntity;
-import net.ticket.enums.ticket.SeatPlaceType;
+import net.ticket.constant.enums.ticket.SeatPlaceType;
 
 import java.math.BigDecimal;
 

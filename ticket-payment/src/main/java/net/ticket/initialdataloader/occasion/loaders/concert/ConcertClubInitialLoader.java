@@ -1,12 +1,11 @@
 package net.ticket.initialdataloader.occasion.loaders.concert;
 
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.dto.occasion.occasionloader.OccasionLoaderDto;
 import net.ticket.entity.occasion.OccasionEntity;
-import net.ticket.enums.occasionloader.OccasionLoader;
-import net.ticket.enums.ticket.TicketType;
+import net.ticket.constant.enums.occasionloader.OccasionLoader;
+import net.ticket.constant.enums.ticket.TicketType;
 import net.ticket.initialdataloader.InitialLoader;
 import net.ticket.transformer.occasion.OccasionLoaderDtoToOccasionEntityTransformer;
 import net.ticket.util.OccasionJsonFileUtil;

@@ -1,4 +1,4 @@
-package net.ticket.enums.occasionloader;
+package net.ticket.constant.enums.occasionloader;
 
 import java.io.File;
 

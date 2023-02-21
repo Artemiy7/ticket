@@ -15,7 +15,7 @@ import net.ticket.client.pdfgenerator.PdfGeneratorClient;
 import net.ticket.ticketexception.bank.InvalidBankAccount;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionSeatException;
-import net.ticket.ticketexception.occasion.NoSuchTicketOrderEntityException;
+import net.ticket.ticketexception.ticketorder.NoSuchTicketOrderEntityException;
 import net.ticket.ticketexception.occasion.OccasionSeatIsBookedException;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.NoSuchBankAccount;

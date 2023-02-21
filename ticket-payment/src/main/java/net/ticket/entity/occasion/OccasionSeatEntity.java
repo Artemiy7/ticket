@@ -2,7 +2,7 @@ package net.ticket.entity.occasion;
 
 import lombok.*;
 import net.ticket.entity.ticketorder.CustomerTicketEntity;
-import net.ticket.enums.ticket.SeatPlaceType;
+import net.ticket.constant.enums.ticket.SeatPlaceType;
 
 import javax.persistence.*;
 

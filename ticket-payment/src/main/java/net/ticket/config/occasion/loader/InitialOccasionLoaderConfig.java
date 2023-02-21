@@ -2,7 +2,7 @@ package net.ticket.config.occasion.loader;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.ticket.enums.occasionloader.OccasionLoader;
+import net.ticket.constant.enums.occasionloader.OccasionLoader;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 

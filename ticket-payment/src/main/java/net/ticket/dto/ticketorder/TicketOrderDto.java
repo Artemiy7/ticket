@@ -3,7 +3,7 @@ package net.ticket.dto.ticketorder;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import net.ticket.enums.ticket.TicketType;
+import net.ticket.constant.enums.ticket.TicketType;
 
 import java.time.LocalDateTime;
 import java.util.Set;

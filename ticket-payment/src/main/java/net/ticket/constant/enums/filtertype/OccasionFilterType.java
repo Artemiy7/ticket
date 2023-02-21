@@ -1,4 +1,4 @@
-package net.ticket.enums.filtertype;
+package net.ticket.constant.enums.filtertype;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
