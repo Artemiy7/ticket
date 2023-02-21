@@ -6,12 +6,17 @@ ticket-payment:
 
 execute mvn ticket-payment [liquibase:update]
 
+
+
 Endpoints:
 ![image](https://user-images.githubusercontent.com/83453822/215362672-ea8275e8-f65d-4c8d-9178-3bd01f3b059d.png)
+
+
 
 Models:
 ![image](https://user-images.githubusercontent.com/83453822/215362706-991fdc49-fec8-44b1-b1f6-6757e429e7af.png)
 ![image](https://user-images.githubusercontent.com/83453822/215362733-1ef3357f-da74-47cf-b376-57e74bd49585.png)
+
 
 
 Get occasion:
@@ -51,9 +56,10 @@ Get pdf tiket from ticket-order example:
 
 GET localhost:8084/ticket/PDF/3000000001
 
-generated result:
+Generated result:
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
+
 
 
 pdf-generator:
