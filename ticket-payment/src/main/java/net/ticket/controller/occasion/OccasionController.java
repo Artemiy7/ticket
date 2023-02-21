@@ -4,11 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.ticket.dto.occasion.OccasionDto;
 import net.ticket.request.pagination.PaginationRequest;
-import net.ticket.enums.filtertype.OccasionFilterType;
+import net.ticket.constant.enums.filtertype.OccasionFilterType;
 import net.ticket.service.occasion.OccasionService;
-import net.ticket.ticketexception.occasion.CorruptedOccasionException;
-import net.ticket.ticketexception.occasion.CorruptedOccasionSeatException;
-import net.ticket.ticketexception.occasion.OccasionOutdatedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -34,41 +31,12 @@ public class OccasionController {
     @RequestMapping(value = "/getOccasionById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id) {
         HttpHeaders headers = new HttpHeaders();
-        try {
-            Optional<OccasionDto> occasionDtoOptional = occasionService.findOccasionWithOccasionSeats(id);
-            if (occasionDtoOptional.isEmpty()) {
-                LOGGER.error("No such OccasionEntity in dataBase ".concat(String.valueOf(id)));
-                headers.add("Occasion-message", "No such Occasion in dataBase");
-                return ResponseEntity
-                        .notFound()
-                        .headers(headers)
-                        .build();
-            }
-            LOGGER.info("OccasionEntity found ".concat(String.valueOf(id)));
-            return ResponseEntity
-                    .ok()
-                    .headers(headers)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(occasionDtoOptional.get());
-        } catch (CorruptedOccasionException e) {
-            e.printStackTrace();
-            headers.add("Occasion-message", "Corrupted occasion");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .headers(headers)
-                                 .build();
-        } catch (CorruptedOccasionSeatException e) {
-            e.printStackTrace();
-            headers.add("Occasion-message", "Corrupted occasion seats");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .headers(headers)
-                                 .build();
-        } catch (OccasionOutdatedException e) {
-            e.printStackTrace();
-            headers.add("Occasion-message", "Occasion outdated");
-            return ResponseEntity.badRequest()
-                                 .headers(headers)
-                                 .build();
-        }
+        Optional<OccasionDto> occasionDtoOptional = occasionService.findOccasionWithOccasionSeats(id);
+        LOGGER.info("OccasionEntity found " + id);
+        return ResponseEntity.ok()
+                             .headers(headers)
+                             .contentType(MediaType.APPLICATION_JSON)
+                             .body(occasionDtoOptional.get());
     }
 
     @ApiOperation(value = "Select and filter OccasionDto without OccasionSeatDto", response = List.class)
@@ -81,15 +49,11 @@ public class OccasionController {
             LOGGER.error("No such OccasionS in dataBase");
             headers.add("OccasionFilter-message", "Filter is absent");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .headers(headers)
-                    .build();
+                                 .headers(headers)
+                                 .build();
         }
         try {
             Optional<List<OccasionDto>> occasionDtoList = occasionService.findFilteredOccasions(multiValueMap, paginationRequest);
-            if (occasionDtoList.isEmpty())
-                return ResponseEntity.notFound()
-                                     .headers(headers)
-                                     .build();
             LOGGER.info("Filters Occasions found ".concat(String.valueOf(occasionDtoList.get().size())));
             return ResponseEntity
                     .ok()
@@ -97,13 +61,7 @@ public class OccasionController {
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(occasionDtoList.get());
         } catch (IllegalArgumentException e) {
-            headers.add("OccasionFilter-message", "Wrong key or value");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .headers(headers)
-                    .build();
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            headers.add("OccasionFilter-message", "Double same type FROM/TO request");
+            headers.add("Occasion-Filter-Error-Message", "Wrong key or value " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .headers(headers)
                     .build();
@@ -116,4 +74,6 @@ public class OccasionController {
         return ResponseEntity.ok()
                              .body(OccasionFilterType.getOccasionFilterTypeList());
     }
+
+
 }
