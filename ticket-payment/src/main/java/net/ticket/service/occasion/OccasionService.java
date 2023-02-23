@@ -45,8 +45,11 @@ public class OccasionService {
             LOGGER.info("No such OccasionEntity " + id);
             throw new NoSuchOccasionException("No such OccasionEntity " + id);
         }
+
         OccasionEntity occasionEntity = occasionEntityOptional.get();
-        checkOccasionEntity(occasionEntity);
+        checkOccasionEntityTime(occasionEntity);
+        checkOccasionEntityNumberOfSeats(occasionEntity);
+        checkOccasionEntityTicketTypes(occasionEntity);
 
         OccasionDto occasionDto = occasionEntityToOccasionDtoTransformer.transform(occasionEntity);
         occasionDto.setDaysToOccasion(calculateDaysToOccasion(occasionEntity.getOccasionTime()));
@@ -75,15 +78,27 @@ public class OccasionService {
                 .count();
     }
 
-    private void checkOccasionEntity(OccasionEntity occasionEntity) throws OccasionOutdatedException, CorruptedOccasionException {
+    private void checkOccasionEntityTime(OccasionEntity occasionEntity) throws OccasionOutdatedException {
         if (LocalDateTime.now().isAfter(occasionEntity.getOccasionTime().plusMinutes(30))) {
             LOGGER.error("Occasion is before current date " + occasionEntity.getOccasionId());
             throw new OccasionOutdatedException(occasionEntity.getOccasionName().concat(" is before current date"));
         }
+    }
+
+    private void checkOccasionEntityNumberOfSeats(OccasionEntity occasionEntity) throws CorruptedOccasionException {
         if (occasionEntity.getNumberOfSeats() != occasionEntity.getOccasionSeatEntitySet().size()) {
             LOGGER.error("Occasion is corrupted " + occasionEntity.getOccasionId());
             throw new CorruptedOccasionException(occasionEntity.getOccasionName().concat(" is corrupted"));
         }
+    }
+
+    private void checkOccasionEntityTicketTypes(OccasionEntity occasionEntity) throws CorruptedOccasionException {
+        occasionEntity.getOccasionSeatEntitySet().forEach(occasionSeatEntity -> {
+            if (!occasionEntity.getTicketType().getSeatPlaceTypes().contains(occasionSeatEntity.getSeatPlaceType())) {
+                LOGGER.error("No such SeatPlaceType " + occasionSeatEntity.getSeatPlaceType() + " in this TicketType " + occasionSeatEntity.getOccasionEntity().getTicketType());
+                throw new CorruptedOccasionException("No such SeatPlaceType " + occasionSeatEntity.getSeatPlaceType() + " in this TicketType " + occasionSeatEntity.getOccasionEntity().getTicketType());
+            }
+        });
     }
 
     @Transactional(readOnly = true)
@@ -106,7 +121,12 @@ public class OccasionService {
             throw new NoSuchOccasionException("No such OccasionEntity");
         }
 
-        occasionEntityListOptional.get().forEach(this::checkOccasionEntity);
+        occasionEntityListOptional.get().forEach(occasionEntity -> {
+            checkOccasionEntityNumberOfSeats(occasionEntity);
+            checkOccasionEntityTicketTypes(occasionEntity);
+            if (!paginationRequest.isWithOutdated())
+                checkOccasionEntityTime(occasionEntity);
+        });
 
         if (paginationRequest.getSortingOrder() == PaginationRequest.SortingOrder.DESC)
             Collections.sort(occasionEntityListOptional.get(), Collections.reverseOrder());

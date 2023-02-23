@@ -47,7 +47,7 @@ public class OccasionRepository {
                 filterRestrictions.add(builder.and(entry.getKey().filterOccasion(root, criteria, builder, entry.getValue().get(0))));
             }
         }
-         criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
+        criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
         TypedQuery<OccasionEntity> query = entityManager.createQuery(criteria);
         query.setFirstResult(resultOrder);
         query.setMaxResults(size);

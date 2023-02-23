@@ -8,8 +8,9 @@ import lombok.*;
 @Getter
 @Setter
 public class PaginationRequest {
-    private short size = 1;
+    private short size;
     private short resultOrder;
+    private boolean withOutdated = false;
     private SortingOrder sortingOrder = SortingOrder.ASC;
 
     public enum SortingOrder {
