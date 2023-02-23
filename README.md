@@ -1,4 +1,4 @@
-<h3 align="left">Ticket application to create pdf ticket with Qr-code</h3>
+<h3 align="left">Ticket app that creates pdf ticket with Qr-code for concerts, trains and other occasions</h3>
 <h3 align="left">Languages and Tools:</h3>
 
 <h3 align="left">Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.</h3>
