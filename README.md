@@ -18,7 +18,7 @@
 
 <h3 align="left">The project is not yet completed and still is in the development phase</h3>
 
-<h4 align="left">ticket-payment:</h4>
+<h3 align="left">ticket-payment:</h3>
 
 Before app launch execute:
  	
@@ -90,7 +90,7 @@ Get pdf tiket from ticket-order example:
 
 
 
-<h4 align="left">pdf-generator:</h4>
+<h3 align="left">pdf-generator:</h3>
 
 <h4 align="left">Endpoints and Models:</h4>
 
@@ -98,7 +98,7 @@ Get pdf tiket from ticket-order example:
 
 
 
-<h4 align="left">currency-exchange:</h4>
+<h3 align="left">currency-exchange:</h3>
 
 <h4 align="left">Endpoints and Models:</h4>
 
