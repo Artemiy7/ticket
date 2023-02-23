@@ -1,0 +1,32 @@
+[{
+  "occasionName": "Concert Eric Clapton",
+  "occasionTime": "2023-03-01 21:58",
+  "numberOfSeats": 3000,
+  "occasionAddress": "Hard Rock Cafe London Picadilly Circus",
+  "ticketType": "CONCERT_STADION",
+  "active": true,
+  "initialPrice": 30.00,
+  "occasionSeatLoaderDtoSet": [
+    {
+      "numberOfSeatTypes": 1000,
+      "seatPlaceType": "CONCERT_STADION_VIP",
+      "from": 1,
+      "to": 1000,
+      "booked": false
+    },
+    {
+      "numberOfSeatTypes": 1000,
+      "seatPlaceType": "CONCERT_STADION_FAN",
+      "from": 1001,
+      "to": 2000,
+      "booked": false
+    },
+    {
+      "numberOfSeatTypes": 1000,
+      "seatPlaceType": "CONCERT_STADION_SEAT",
+      "from": 2001,
+      "to": 3000,
+      "booked": false
+    }
+  ]}
+]

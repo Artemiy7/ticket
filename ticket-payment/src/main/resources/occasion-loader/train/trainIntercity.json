@@ -1,0 +1,25 @@
+[{
+  "occasionName": "Train London - Edinburgh",
+  "occasionTime": "2023-03-01 21:58",
+  "numberOfSeats": 200,
+  "occasionAddress": "Train station London Picadilly Circus",
+    "ticketType": "TRAIN_INTERCITY",
+  "active": true,
+  "initialPrice": 50.00,
+  "occasionSeatLoaderDtoSet": [
+    {
+      "numberOfSeatTypes": 1000,
+      "seatPlaceType": "TRAIN_INTERCITY_BUSINESS",
+      "from": 1,
+      "to": 100,
+      "booked": false
+    },
+    {
+      "numberOfSeatTypes": 100,
+      "seatPlaceType": "TRAIN_INTERCITY_ECONOMIC",
+      "from": 101,
+      "to": 200,
+      "booked": false
+    }
+  ]}
+]

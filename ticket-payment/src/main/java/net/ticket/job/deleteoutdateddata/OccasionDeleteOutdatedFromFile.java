@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@Component
+@Component
 public class OccasionDeleteOutdatedFromFile {
     private final static Logger LOGGER = LoggerFactory.getLogger(OccasionDeleteOutdatedFromFile.class);
     private static int count = 0;
