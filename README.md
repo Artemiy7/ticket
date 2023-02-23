@@ -74,7 +74,7 @@ Ticket-order creation example:
 	    "occasionDate" : "2023-11-22 22:10",
 	    "occasionName" : "Concert Eric Clapton",
 	    "bankAccount": 2548870,
-	    "currency" : "uah"
+	    "currency" : "usd"
 	}
 
 
