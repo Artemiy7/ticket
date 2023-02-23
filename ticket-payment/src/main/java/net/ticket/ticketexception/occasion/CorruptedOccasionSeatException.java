@@ -1,7 +1,12 @@
 package net.ticket.ticketexception.occasion;
 
-public class CorruptedOccasionSeatException extends RuntimeException {
+import lombok.Getter;
+
+@Getter
+public class CorruptedOccasionSeatException extends OccasionException {
+    private String message;
     public CorruptedOccasionSeatException(String message) {
         super(message);
+        this.message = message;
     }
 }
