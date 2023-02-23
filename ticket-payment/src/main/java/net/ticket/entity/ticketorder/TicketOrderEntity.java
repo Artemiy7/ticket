@@ -4,7 +4,6 @@ package net.ticket.entity.ticketorder;
 import lombok.*;
 import net.ticket.constant.enums.ticket.TicketType;
 
-
 import javax.persistence.*;
 import java.util.Set;
 
@@ -37,5 +36,4 @@ public class TicketOrderEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "ticketOrderEntity", fetch=FetchType.LAZY)
     private Set<CustomerTicketEntity> customersEntitySet;
-
 }

@@ -3,7 +3,7 @@ package net.ticket.job.deleteoutdateddata;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import net.ticket.dto.occasion.occasionloader.OccasionLoaderDto;
-import net.ticket.enums.occasionloader.OccasionLoader;
+import net.ticket.constant.enums.occasionloader.OccasionLoader;
 import net.ticket.repository.job.ScheduledJobRepository;
 import net.ticket.service.occasion.OccasionService;
 import net.ticket.util.OccasionJsonFileUtil;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
+//@Component
 public class OccasionDeleteOutdatedFromFile {
     private final static Logger LOGGER = LoggerFactory.getLogger(OccasionDeleteOutdatedFromFile.class);
     private static int count = 0;

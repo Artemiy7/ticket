@@ -2,9 +2,10 @@ package net.ticket.dto.occasion;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import net.ticket.enums.ticket.SeatPlaceType;
+import net.ticket.constant.enums.ticket.SeatPlaceType;
 import org.springframework.lang.NonNull;
 
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
@@ -13,12 +14,12 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class OccasionSeatDto {
+    @Positive
     private BigDecimal cost;
-    @NonNull
+    @Positive
     private short seat;
     @JsonBackReference
     private OccasionDto occasionDto;
-    @NonNull
     private boolean isBooked;
     @NonNull
     private SeatPlaceType seatPlaceType;

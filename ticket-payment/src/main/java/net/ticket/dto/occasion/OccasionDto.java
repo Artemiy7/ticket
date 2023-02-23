@@ -3,28 +3,29 @@ package net.ticket.dto.occasion;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import net.ticket.enums.ticket.TicketType;
+import net.ticket.constant.enums.ticket.TicketType;
 import org.springframework.lang.NonNull;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-@Builder
 public class OccasionDto {
-    @NonNull
+    @NotBlank
     private String occasionName;
     @NonNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime occasionTime;
-    @NonNull
+    @Positive
     private short daysToOccasion;
-    @NonNull
+    @Positive
     private short notBookedSeats;
-    @NonNull
+    @Positive
     private short numberOfSeats;
     @NonNull
     private String occasionAddress;
