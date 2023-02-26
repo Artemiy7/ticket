@@ -12,8 +12,8 @@
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="70" height="70"/> </a> </p>
 
 
-| Service | Port  || Service |
-| :---:   | :---: || :---:   |
+| Service | Port  | Service |
+| :---:   | :---: | :---:   |
 | ticket-payment | 8084   |  |
 | pdf-generator | 8083   |  |
 | currency-exchange | 8082   |  |
