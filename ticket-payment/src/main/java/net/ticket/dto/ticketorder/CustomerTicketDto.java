@@ -6,6 +6,8 @@ import lombok.*;
 import net.ticket.entity.occasion.OccasionSeatEntity;
 import net.ticket.constant.enums.ticket.SeatPlaceType;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 @NoArgsConstructor
@@ -15,15 +17,16 @@ import java.math.BigDecimal;
 @Setter
 public class CustomerTicketDto {
     private long customerTicketId;
+    @Positive
     @NonNull
     private BigDecimal amount;
-    @NonNull
+    @NotBlank
     private String firstName;
-    @NonNull
+    @NotBlank
     private String lastName;
-    @NonNull
+    @NotBlank
     private String country;
-    @NonNull
+    @Positive
     private short seat;
     @NonNull
     private SeatPlaceType seatPlaceType;

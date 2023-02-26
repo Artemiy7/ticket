@@ -22,9 +22,9 @@ import net.ticket.ticketexception.bank.NoSuchBankAccount;
 import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
 import net.ticket.transformer.ticketorder.TicketOrderDtoToTicketOrderEntityTransformer;
 import net.ticket.transformer.ticketorder.TicketOrderEntityToTicketOrderDtoTransformer;
+import net.ticket.util.ValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -47,7 +47,9 @@ public class TicketOrderService {
     private final BankSimulatorClient bankSimulatorClient;
     private final CurrencyExchangeClient currencyExchangeClient;
     private final PaymentRequestService paymentRequestService;
-    @Autowired
+    private final ValidatorUtils validatorUtils;
+
+
     public TicketOrderService(@Value("${service.default-currency}") String defaultCurrency,
                               TicketOrderRepository ticketOrderRepository,
                               OccasionRepository occasionRepository,
@@ -57,7 +59,8 @@ public class TicketOrderService {
                               BankSimulatorClient bankSimulatorClient,
                               CurrencyExchangeClient currencyExchangeClient,
                               PdfGeneratorClient pdfGeneratorClient,
-                              PaymentRequestService paymentRequestService) {
+                              PaymentRequestService paymentRequestService,
+                              ValidatorUtils validatorUtils) {
         this.defaultCurrency = defaultCurrency;
         this.ticketOrderRepository = ticketOrderRepository;
         this.occasionRepository = occasionRepository;
@@ -68,6 +71,7 @@ public class TicketOrderService {
         this.currencyExchangeClient = currencyExchangeClient;
         this.pdfGeneratorClient = pdfGeneratorClient;
         this.paymentRequestService = paymentRequestService;
+        this.validatorUtils = validatorUtils;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -121,6 +125,8 @@ public class TicketOrderService {
         TicketOrderEntity ticketOrderEntity = ticketOrderRepository.findTicketOrder(ticketOrderId)
                                                                    .orElseThrow(() -> new NoSuchTicketOrderEntityException("No such TicketOrder " + ticketOrderId));
         TicketOrderDto ticketOrderDto = ticketOrderEntityToTicketOrderDtoTransformer.transform(ticketOrderEntity);
+        validatorUtils.validationBeforeDeserialization(ticketOrderDto);
+        ticketOrderDto.getCustomerTicketDto().forEach(validatorUtils::validationBeforeDeserialization);
         return pdfGeneratorClient.performRequestToPdfGeneratorService(ticketOrderDto);
     }
 }
