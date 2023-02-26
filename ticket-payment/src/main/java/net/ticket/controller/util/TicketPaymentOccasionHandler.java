@@ -3,7 +3,7 @@ package net.ticket.controller.util;
 import net.ticket.controller.occasion.OccasionController;
 import net.ticket.controller.ticketorder.TicketOrderRestController;
 import net.ticket.response.error.ErrorResponse;
-import net.ticket.response.error.SerializationError;
+import net.ticket.response.error.SerializationErrorResponse;
 import net.ticket.ticketexception.DeserializationException;
 import net.ticket.ticketexception.SerializationException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
@@ -35,7 +35,7 @@ public class TicketPaymentOccasionHandler {
     public ResponseEntity<ErrorResponse> handleSerializationError(SerializationException serializationException, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Occasion-message", serializationException.getMessage());
-        return new ResponseEntity<>(SerializationError.builder()
+        return new ResponseEntity<>(SerializationErrorResponse.builder()
                                                       .httpStatus(HttpStatus.BAD_REQUEST)
                                                       .message(serializationException.getMessage())
                                                       .localDateTime(LocalDateTime.now())
@@ -48,7 +48,7 @@ public class TicketPaymentOccasionHandler {
     public ResponseEntity<ErrorResponse> handleDeserializationException(DeserializationException deserializationException, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Occasion-message", deserializationException.getMessage());
-        return new ResponseEntity<>(SerializationError.builder()
+        return new ResponseEntity<>(SerializationErrorResponse.builder()
                                                       .httpStatus(HttpStatus.INTERNAL_SERVER_ERROR)
                                                       .message(deserializationException.getMessage())
                                                       .localDateTime(LocalDateTime.now())
