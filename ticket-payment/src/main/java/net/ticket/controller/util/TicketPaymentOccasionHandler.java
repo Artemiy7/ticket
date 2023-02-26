@@ -28,7 +28,7 @@ public class TicketPaymentOccasionHandler {
                                                  .message(noSuchOccasionException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.NOT_FOUND);
+                                                 .build(), headers, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({SerializationException.class})
@@ -41,7 +41,7 @@ public class TicketPaymentOccasionHandler {
                                                       .localDateTime(LocalDateTime.now())
                                                       .path(request.getDescription(false))
                                                       .resultValidations(serializationException.getResultValidations())
-                                                      .build(), HttpStatus.BAD_REQUEST);
+                                                      .build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({DeserializationException.class})
@@ -54,6 +54,6 @@ public class TicketPaymentOccasionHandler {
                                                       .localDateTime(LocalDateTime.now())
                                                       .path(request.getDescription(false))
                                                       .resultValidations(deserializationException.getResultValidations())
-                                                      .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                                                      .build(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

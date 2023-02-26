@@ -43,7 +43,7 @@ public class OccasionService {
         Optional<OccasionEntity> occasionEntityOptional = occasionRepository.getOccasionById(id);
         if (occasionEntityOptional.isEmpty() || occasionEntityOptional.get().getOccasionSeatEntitySet().size() == 0) {
             LOGGER.info("No such OccasionEntity " + id);
-            throw new NoSuchOccasionException("No such OccasionEntity " + id);
+            return Optional.empty();
         }
 
         OccasionEntity occasionEntity = occasionEntityOptional.get();

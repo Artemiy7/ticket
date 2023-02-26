@@ -24,7 +24,7 @@ public class OccasionExceptionHandler {
                                                  .message(corruptedOccasionException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                                                 .build(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({CorruptedOccasionSeatException.class})
@@ -36,7 +36,7 @@ public class OccasionExceptionHandler {
                                                  .message(corruptedOccasionSeatException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.INTERNAL_SERVER_ERROR);
+                                                 .build(), headers, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler({OccasionOutdatedException.class})
@@ -48,7 +48,7 @@ public class OccasionExceptionHandler {
                                                  .message(occasionOutdatedException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.BAD_REQUEST);
+                                                 .build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({OccasionFilterException.class})
@@ -60,6 +60,6 @@ public class OccasionExceptionHandler {
                                                  .message(occasionFilterException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.BAD_REQUEST);
+                                                 .build(), headers, HttpStatus.BAD_REQUEST);
     }
 }

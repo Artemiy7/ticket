@@ -7,6 +7,7 @@ import net.ticket.request.pagination.PaginationRequest;
 import net.ticket.constant.enums.filtertype.OccasionFilterType;
 import net.ticket.response.error.ErrorResponse;
 import net.ticket.service.occasion.OccasionService;
+import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.util.ValidatorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -36,25 +38,29 @@ public class OccasionController {
     }
 
     @ApiOperation(value = "Selects OccasionDto by id with OccasionSeatsDto and calculates OccasionSeatDto cost by date, seatType and number of booked seats", response = OccasionDto.class)
-    @RequestMapping(value = "/getOccasionById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id) {
+    @RequestMapping(value = "/findOccasionById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id,
+                                                       final HttpServletRequest httpServletRequest) {
         HttpHeaders headers = new HttpHeaders();
-        Optional<OccasionDto> occasionDtoOptional = occasionService.findOccasionWithOccasionSeats(id);
+        headers.add("path", httpServletRequest.getRequestURI());
+        OccasionDto occasionDto = occasionService.findOccasionWithOccasionSeats(id).orElseThrow(() -> new NoSuchOccasionException("No such OccasionEntity " + id));
         LOGGER.info("OccasionEntity found " + id);
-        occasionDtoOptional.get().getOccasionSeatDto().forEach(occasionSeatDto -> occasionSeatDto.setCost(BigDecimal.ZERO));
-        validatorUtils.validationBeforeDeserialization(occasionDtoOptional.get());
-        occasionDtoOptional.get().getOccasionSeatDto().forEach(validatorUtils::validationBeforeDeserialization);
+        occasionDto.getOccasionSeatDto().forEach(occasionSeatDto -> occasionSeatDto.setCost(BigDecimal.ZERO));
+        validatorUtils.validationBeforeDeserialization(occasionDto);
+        occasionDto.getOccasionSeatDto().forEach(validatorUtils::validationBeforeDeserialization);
         return ResponseEntity.ok()
                              .headers(headers)
                              .contentType(MediaType.APPLICATION_JSON)
-                             .body(occasionDtoOptional.get());
+                             .body(occasionDto);
     }
 
     @ApiOperation(value = "Select and filter OccasionDto without OccasionSeatDto", response = List.class)
     @RequestMapping(value = "/filterOccasion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OccasionDto>> filterOccasions(@RequestParam MultiValueMap<String, String> multiValueMap,
-                                                             @RequestBody PaginationRequest paginationRequest) {
+                                                             @RequestBody PaginationRequest paginationRequest,
+                                                             final HttpServletRequest httpServletRequest) {
         HttpHeaders headers = new HttpHeaders();
+        headers.add("path", httpServletRequest.getRequestURI() + httpServletRequest.getQueryString());
 
         if (multiValueMap.isEmpty()) {
             LOGGER.error("No such OccasionS in dataBase");
@@ -86,8 +92,11 @@ public class OccasionController {
 
     @ApiOperation(value = "Returns number of filter parameters", response = HttpStatus.class)
     @RequestMapping(value = "/fetchOccasionFilters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<OccasionFilterType>> fetchOccasionFilters() {
+    public ResponseEntity<List<OccasionFilterType>> fetchOccasionFilters(final HttpServletRequest httpServletRequest) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("path", httpServletRequest.getRequestURI() + httpServletRequest.getQueryString());
         return ResponseEntity.ok()
+                             .headers(headers)
                              .body(OccasionFilterType.getOccasionFilterTypeList());
     }
 

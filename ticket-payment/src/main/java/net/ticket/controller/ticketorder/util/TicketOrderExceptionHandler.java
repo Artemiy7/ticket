@@ -29,7 +29,7 @@ public class TicketOrderExceptionHandler {
                                                  .message(occasionException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.BAD_REQUEST);
+                                                 .build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NoSuchBankAccount.class, InvalidBankAccount.class})
@@ -41,7 +41,7 @@ public class TicketOrderExceptionHandler {
                                                  .message(runtimeException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.BAD_REQUEST);
+                                                 .build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NotEnoughAmountForPayment.class})
@@ -53,7 +53,7 @@ public class TicketOrderExceptionHandler {
                                                  .message(notEnoughAmountForPayment.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.BAD_REQUEST);
+                                                 .build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({BankServerError.class})
@@ -65,7 +65,7 @@ public class TicketOrderExceptionHandler {
                                                  .message(bankServerError.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.BAD_REQUEST);
+                                                 .build(), headers, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler({NoSuchTicketOrderEntityException.class})
@@ -77,6 +77,6 @@ public class TicketOrderExceptionHandler {
                                                  .message(noSuchTicketOrderEntityException.getMessage())
                                                  .localDateTime(LocalDateTime.now())
                                                  .path(request.getDescription(false))
-                                                 .build(), HttpStatus.NOT_FOUND);
+                                                 .build(), headers, HttpStatus.NOT_FOUND);
     }
 }
