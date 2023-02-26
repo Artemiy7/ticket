@@ -1,0 +1,87 @@
+server:
+  port: 8084
+  error:
+    whitelabel:
+      enabled: false
+  timeZone: UTC
+spring:
+  cloud:
+    config:
+      enabled: false
+  db:
+    driver: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ticketpayment?serverTimezone=UTC
+    username: root
+    password: aaaa
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        show_sql: true
+        hbm2ddl:
+          auto: none
+        packagesToScan: net.ticket
+  liquibase:
+    enabled: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    metadataMap:
+      instanceId: ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}
+
+
+service:
+  jobs:
+    occasionLoader:
+      occasionLoaderSaveDataFromFileJob:
+        execution-time: "*/7 * * * * *"
+      occasionSetNotActiveOutdatedDataJob:
+        execution-time: "*/7 * * * * *"
+      occasionDeleteOutdatedDataFromDBJob:
+        execution-time: "*/7 * * * * *"
+      occasionDeleteOutdatedFromFile:
+        execution-time: "*/7 * * * * *"
+  default-currency: usd
+  bank:
+    url:
+      accountUrl: http://localhost:8082/bank/account/%s
+      paymentUrl: http://localhost:8082/bank/payment
+  currency-exchange:
+    exchange-currency:
+      urn: //currency-exchange/exchange/%s/%s/%s
+  pdf-generator:
+    generate-ticket-pdf:
+      urn: //pdf-generator/generateTicketPdf
+  occasions:
+    occasionLoaderDtoList:
+      - concertStadionInitialLoader
+      - concertClubInitialLoader
+      - intercityTrainInitialLoader
+    occasionLoaderFileList:
+      - CONCERT_CLUB_FILE
+      - CONCERT_CLUB_STADION_FILE
+      - TRAIN_INTERCITY_FILE
+    occasion-coefficient:
+      concert:
+        club:
+          balcony: 7.0
+          vip: 2.0
+          fan: 4.0
+          date: 0.3
+          seat: 0.3
+        stadion:
+          vip: 3.0
+          fan: 1.0
+          seating: 2.0
+          date: 0.2
+          seat: 0.1
+      train:
+        intercity:
+          business: 2.0
+          economic: 1.0
+          date: 0.1
+          seat: 0.1
