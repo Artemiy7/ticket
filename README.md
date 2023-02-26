@@ -14,13 +14,13 @@
 
 | Service | Port  | Service |
 | :---:   | :---: | :---:   |
-| ticket-payment | 8084   |  |
+| ticket-payment | 8084   | [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Artemiy7/ticket/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Artemiy7/ticket/tree/master)  |
 | pdf-generator | 8083   |  |
 | currency-exchange | 8082   |  |
 | bank-simulator | 8081   |  |
 
 
-[![CircleCI](https://dl.circleci.com/status-badge/img/gh/Artemiy7/ticket/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Artemiy7/ticket/tree/master) 
+
 <h3 align="left">! The project is not yet completed and still is in the development phase !</h3>
 
 <h3 align="left">ticket-payment:</h3>
