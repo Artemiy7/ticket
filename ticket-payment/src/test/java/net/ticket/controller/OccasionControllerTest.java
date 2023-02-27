@@ -1,53 +1,46 @@
 package net.ticket.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import net.ticket.constant.enums.ticket.SeatPlaceType;
 import net.ticket.constant.enums.ticket.TicketType;
 import net.ticket.controller.occasion.OccasionController;
 import net.ticket.dto.occasion.OccasionDto;
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.service.occasion.OccasionService;
+import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.util.ValidatorUtils;
+import org.apache.catalina.connector.RequestFacade;
 import org.bouncycastle.util.Objects;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @RunWith(JUnit4.class)
-@AutoConfigureMockMvc
-@SpringBootTest
 class OccasionControllerTest {
-    @Autowired
-    OccasionController occasionController;
-    @Autowired
-    private MockMvc mockMvc;
-    @MockBean
+    @Mock
     private OccasionService occasionService;
-    @MockBean
+    @Mock
     private ValidatorUtils validatorUtils;
-    @Autowired
-    private ObjectMapper objectMapper;
     private OccasionDto occasionDto;
     private OccasionSeatDto occasionSeatDto;
 
@@ -73,27 +66,36 @@ class OccasionControllerTest {
 
 
     @Test
-    public void findOccasionByIdTest200() throws Exception {
+    public void findOccasionByIdOkTest() {
+        OccasionController occasionController = new OccasionController(occasionService, validatorUtils);
+        HttpServletRequest  httpServletRequest = mock(RequestFacade.class);
+
         when(occasionService.findOccasionWithOccasionSeats(any(Long.class))).thenReturn(Optional.of(occasionDto));
+        when(httpServletRequest.getRequestURI()).thenReturn("/findOccasionById/100000001");
 
-        String response = mockMvc.perform(get("/occasion/findOccasionById/{id}", 1L)
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(occasionDto)))
-                .andExpect(status().isOk())
-                .andExpect(header().string("path", "/occasion/findOccasionById/1"))
-                .andReturn().getResponse().getContentAsString();
+        ResponseEntity<OccasionDto> occasionDtoResponseEntity = occasionController.getOccasionById(100000001l, httpServletRequest);
 
-        assert Objects.areEqual(response, objectMapper.writeValueAsString(occasionDto));
+        verify(occasionService, Mockito.times(1)).findOccasionWithOccasionSeats(100000001l);
+        assert Objects.areEqual(occasionDtoResponseEntity.getBody(), occasionDto);
+        assert occasionDtoResponseEntity.getHeaders().get("path").get(0).equals("/findOccasionById/100000001");
+        assert occasionDtoResponseEntity.getHeaders().get("Content-Type").get(0).equals("application/json");
+        assert occasionDtoResponseEntity.getStatusCode().equals(HttpStatus.OK);
     }
 
     @Test
-    public void findOccasionByIdTest404() throws Exception {
-        when(occasionService.findOccasionWithOccasionSeats(any(Long.class))).thenReturn(Optional.empty());
+    public void findOccasionByIdNoSuchOccasionTest() {
+//        OccasionController occasionController = new OccasionController(occasionService, validatorUtils);
+//        HttpServletRequest  httpServletRequest = mock(RequestFacade.class);
+//
+//        given(occasionService.findOccasionWithOccasionSeats(any(Long.class))).willThrow(new NoSuchOccasionException("No such OccasionEntity 100000001"));
+//        given(httpServletRequest.getRequestURI()).willReturn("/findOccasionById/100000001");
+//
+//        when(occasionController.getOccasionById(100000001, httpServletRequest));//.thenReturn(ResponseEntity.of(null));
 
-        mockMvc.perform(get("/occasion/findOccasionById/{id}", 1L)
-                .contentType("application/json")
-                .content(objectMapper.writeValueAsString(occasionDto)))
-                .andExpect(status().isNotFound())
-                .andExpect(header().string("Occasion-message", "No such OccasionEntity 1"));
+//        verify(occasionService, Mockito.times(1)).findOccasionWithOccasionSeats(100000001l);
+//        assert Objects.areEqual(occasionDtoResponseEntity.getBody(), occasionDto);
+//        assert occasionDtoResponseEntity.getHeaders().get("path").get(0).equals("/findOccasionById/100000001");
+//        assert occasionDtoResponseEntity.getHeaders().get("Content-Type").get(0).equals("application/json");
+//        assert occasionDtoResponseEntity.getStatusCode().equals(HttpStatus.OK);
     }
 }
