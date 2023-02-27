@@ -12,7 +12,7 @@
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="70" height="70"/> </a> </p>
 
 
-| Service | Port  | Unit Tests |
+| Service | Port  |  CI  |
 | :---:   | :---: | :---:   |
 | ticket-payment | 8084   | [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Artemiy7/ticket/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Artemiy7/ticket/tree/master)  |
 | pdf-generator | 8083   |  |
