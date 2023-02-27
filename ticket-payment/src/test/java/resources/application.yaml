@@ -16,6 +16,7 @@ spring:
   jpa:
     properties:
       hibernate:
+        ddl-auto: create
         dialect: org.hibernate.dialect.MySQL8Dialect
         show_sql: true
         hbm2ddl:
