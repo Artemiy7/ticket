@@ -74,7 +74,7 @@ Ticket-order creation example:
 		 "amount" : "51.00",
 		 "seatPlaceType" : "CONCERT_CLUB_BALCONY"
 		}],
-		"ticketType" : "CONCERT_CLUB",
+	    "ticketType" : "CONCERT_CLUB",
 	    "occasionAddress" : "Hard Rock Cafe London Picadilly Circus",
 	    "occasionDate" : "2023-11-22 22:10",
 	    "occasionName" : "Concert Eric Clapton",
