@@ -20,7 +20,7 @@ jobs:
     steps:
       # Checkout the code as the first step.
       - checkout:
-        path: ~/repo/ticket-payment/
+          path: ~/repo/ticket-payment/
       # Use mvn clean and package as the standard maven build phase
       - run:
           name: Build
