@@ -11,15 +11,12 @@
 <a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="89" height="89"/> </a>
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="70" height="70"/> </a> </p>
 
-
 | Service | Port  |  CI  |
 | :---:   | :---: | :---:   |
 | ticket-payment | 8084   | [![CircleCI](https://dl.circleci.com/status-badge/img/gh/Artemiy7/ticket/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/Artemiy7/ticket/tree/master)  |
 | pdf-generator | 8083   |  |
 | currency-exchange | 8082   |  |
 | bank-simulator | 8081   |  |
-
-
 
 <h3 align="left">! The project is not yet completed and still is in the development phase !</h3>
 
