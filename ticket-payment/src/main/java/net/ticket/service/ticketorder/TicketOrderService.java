@@ -17,6 +17,7 @@ import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionSeatException;
 import net.ticket.ticketexception.ticketorder.NoSuchTicketOrderEntityException;
 import net.ticket.ticketexception.occasion.OccasionSeatIsBookedException;
+import org.springframework.stereotype.Service;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.NoSuchBankAccount;
 import net.ticket.ticketexception.bank.NotEnoughAmountForPayment;
@@ -33,7 +34,8 @@ import org.springframework.web.client.HttpServerErrorException;
 
 import javax.persistence.NoResultException;
 import java.util.Optional;
-@Component
+
+@Service
 public class TicketOrderService {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(TicketOrderService.class);
