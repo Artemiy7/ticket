@@ -1,7 +1,7 @@
 <h2 align="left">Ticket app that creates pdf ticket with QR-code</h2>
 <h4 align="left">! The project is not yet completed and still is in the development phase.
 In the next releases, it is planned to decompose the ticket-payment service into occasion-service and ticket-order-service and add a message broker for implementing a saga pattern. I also plan to separate qr-code generation into a separate service and add functionality to read QR-codes.
-In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins using AWS EC2. !</h4>
+In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins. !</h4>
 
 <h3 align="left">Languages and Tools:</h3>
 
