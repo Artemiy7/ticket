@@ -1,4 +1,5 @@
 <h3 align="left">Ticket app that creates pdf ticket with Qr-code for concerts, trains and other occasions</h3>
+<h3 align="left">! The project is not yet completed and still is in the development phase !</h3>
 <h3 align="left">Languages and Tools:</h3>
 
 <h3 align="left">Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.</h3>
@@ -17,8 +18,6 @@
 | pdf-generator | 8083   |  |
 | currency-exchange | 8082   |  |
 | bank-simulator | 8081   |  |
-
-<h3 align="left">! The project is not yet completed and still is in the development phase !</h3>
 
 <h3 align="left">ticket-payment:</h3>
 
