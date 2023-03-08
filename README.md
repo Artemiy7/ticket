@@ -108,8 +108,6 @@ To generate pdf tiket with QR-code:
 	
 ticket-paymnet service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer:
 
-<h4 align="left">Generated result from TicketOrderDto where for every CustomerTicketDto printed pdf-ticket:</h4>
-
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
