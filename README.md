@@ -3,19 +3,14 @@
 In the next releases, it is planned to decompose the ticket-payment service into occasion-service and ticket-order-service and add a message broker for implementing a saga pattern. I also plan to separate qr-code generation into a separate service and add functionality to read QR-codes.
 In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins. !</h4>
 
-<h3 align="left">Languages and Tools:</h3>
+<h3 align="left">Languages and Tools: Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.</h3>
 
-<h3 align="left">Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.</h3>
-<h4 align="left">Hibernate JPA was used instead of Spring Data JPA for learning purpose.</h4>
-<h4 align="left">Before app launch you must have JDK 11 and MySql server installed on your machine.</h4>
 <p align="left"> <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="79" height="79"/> </a> 
 <a href="https://spring.io/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="70" height="70"/> </a>
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/hibernate/hibernate-icon.svg" alt="postman" width="70" height="70"/> </a> 
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://github.com/vscode-icons/vscode-icons/blob/master/icons/folder_type_maven.svg" alt="postman" width="70" height="70"/> </a> 
-<a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://upload.vectorlogo.zone/logos/mockito/images/36c60459-46b2-46dd-87b7-5ed157df95d4.svg" alt="postman" width="110" height="70"/> </a> 
-<a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://upload.vectorlogo.zone/logos/liquibase/images/bd2ff83d-5758-4629-ad54-b1de6f15c7c1.svg" alt="postman" width="120" height="70"/> </a> 
-<a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="89" height="89"/> </a>
-<a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/getpostman/getpostman-icon.svg" alt="postman" width="70" height="70"/> </a> </p>
+<a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://upload.vectorlogo.zone/logos/mockito/images/36c60459-46b2-46dd-87b7-5ed157df95d4.svg" alt="postman" width="110" height="70"/> </a>  
+<a href="https://www.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mysql/mysql-original-wordmark.svg" alt="mysql" width="89" height="89"/> </a> </p>
 
 | Service | Port  |  CI  |
 | :---:   | :---: | :---:   |
@@ -23,6 +18,8 @@ In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins
 | pdf-generator | 8083   |  |
 | currency-exchange | 8082   |  |
 | bank-simulator | 8081   |  |
+
+Hibernate JPA was used instead of Spring Data JPA for learning purpose. Before app launch you must have JDK 11 and MySql server installed on your machine.
 
 <h3 align="left">ticket-payment:</h3>
 
