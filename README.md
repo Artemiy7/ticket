@@ -42,6 +42,7 @@ Before app launch execute:
 
 
 
+
 Get occasion:
 
 	GET localhost:8084/occasion/getOccasionById/1000000001
