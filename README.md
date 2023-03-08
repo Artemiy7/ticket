@@ -1,12 +1,13 @@
-<h2 align="left">Ticket app that creates pdf ticket with Qr-code for concerts, trains and other occasions</h2>
+<h2 align="left">Ticket app that creates pdf ticket with QR-code</h2>
 <h4 align="left">! The project is not yet completed and still is in the development phase.
-In the next releases, it is planned to divide the ticket-payment service into occasion-service and ticket-order-service and add a message broker for implementing a saga pattern for communication. I also plan to separate qr-code generation into a separate service and add functionality to read QR-codes.
+In the next releases, it is planned to decompose the ticket-payment service into occasion-service and ticket-order-service and add a message broker for implementing a saga pattern. I also plan to separate qr-code generation into a separate service and add functionality to read QR-codes.
 In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins using AWS EC2. !</h4>
 
 <h3 align="left">Languages and Tools:</h3>
 
 <h3 align="left">Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.</h3>
 <h4 align="left">Hibernate JPA was used instead of Spring Data JPA for learning purpose.</h4>
+<h4 align="left">Before app launch you must have JDK 11 and MySql server installed on your machine.</h4>
 <p align="left"> <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="79" height="79"/> </a> 
 <a href="https://spring.io/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="70" height="70"/> </a>
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/hibernate/hibernate-icon.svg" alt="postman" width="70" height="70"/> </a> 
@@ -25,7 +26,6 @@ In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins
 
 <h3 align="left">ticket-payment:</h3>
 
-Before app launch you must have JDK 11 and MySql server installed on your machine.
 
 Execute to create Database:
  	
@@ -44,26 +44,39 @@ Execute to create Database:
 
 
 
-Get occasion:
+Select occasion:
 
 	GET localhost:8084/occasion/getOccasionById/1000000001
 
 
 
-Fetch available filters
+
+You can use filters and pagination to retrieve data you need:
+
+	GET localhost:8084/occasion/filterOccasion?TICKET_TYPE=CONCERT_CLUB&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=100
+	
+		
+	{
+  	    "size": 3,
+  	    "resultOrder": 3,
+  	    "withOutdated": false,
+  	    "sortingOrder": "ASC"
+	}
+
+
+
+
+Fetch available filters:
 
 	GET localhost:8084/fetchOccasionFilters
 
+	
 
 
-Filter occasion example:
-
-	GET localhost:8084/occasion/filterOccasion?TICKET_TYPE=CONCERT_CLUB&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=1000
 
 
-With selected Occasion you can create a pdf ticket with a qr-code.
 
-Ticket-order creation example:
+With selected Occasion you can create a pdf ticket with a qr-code:
 
 	POST localhost:8084/ticket/save
 
@@ -87,10 +100,15 @@ Ticket-order creation example:
 
 
 
+Default currency is "usd" but you can use another currency instead of "usd" for example "uah".
+In this case service will make a request to config-server and it will convert the currency you specified into "usd" according to the current exchange rate.
 
-Get pdf tiket from ticket-order example:
+
+To generate pdf tiket with QR-code:
 
 	GET localhost:8084/ticket/PDF/3000000001
+	
+ticket-paymnet service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer:
 
 <h4 align="left">Generated result from TicketOrderDto where for every CustomerTicketDto printed pdf-ticket:</h4>
 
