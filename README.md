@@ -1,12 +1,12 @@
 <h2 align="left">Ticket app that creates pdf ticket with Qr-code for concerts, trains and other occasions</h2>
 <h4 align="left">! The project is not yet completed and still is in the development phase.
 In the next releases, it is planned to divide the ticket-payment service into occasion-service and ticket-order-service and add a message broker for implementing a saga pattern for communication. I also plan to separate qr-code generation into a separate service and add functionality to read QR-codes.
-In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins using AWS EC2.
+In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins using AWS EC2.</h4>
 
-This api can select Occasions(Сoncerts, Trains, etc) from the database, filter them and paginate and calculate cost depending on the date, number of seats and currency. With Occasion you can create a pdf ticket with a qr-code.</h4>
 <h3 align="left">Languages and Tools:</h3>
 
 <h3 align="left">Spring Boot, Spring Cloud, Hibernate Jpa, Lombok, MySql.</h3>
+<h4 align="left">Hibernate JPA was used instead of Spring Data JPA for learning purpose.</h4>
 <p align="left"> <a href="https://www.java.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="java" width="79" height="79"/> </a> 
 <a href="https://spring.io/" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/springio/springio-icon.svg" alt="spring" width="70" height="70"/> </a>
 <a href="https://postman.com" target="_blank" rel="noreferrer"> <img src="https://www.vectorlogo.zone/logos/hibernate/hibernate-icon.svg" alt="postman" width="70" height="70"/> </a> 
@@ -25,7 +25,9 @@ This api can select Occasions(Сoncerts, Trains, etc) from the database, filter 
 
 <h3 align="left">ticket-payment:</h3>
 
-Before app launch execute:
+Before app launch you must have JDK 11 and MySql server installed on your machine.
+
+Execute to create Database:
  	
 	mvn ticket-payment [liquibase:update]
 
@@ -40,7 +42,7 @@ Before app launch execute:
 ![image](https://user-images.githubusercontent.com/83453822/215362706-991fdc49-fec8-44b1-b1f6-6757e429e7af.png)
 ![image](https://user-images.githubusercontent.com/83453822/215362733-1ef3357f-da74-47cf-b376-57e74bd49585.png)
 
-
+To select Occasions(Сoncerts, Trains, etc) from the database, filter them and paginate and calculate cost depending on the date, number of seats.
 
 
 Get occasion:
@@ -60,6 +62,7 @@ Filter occasion example:
 	GET localhost:8084/occasion/filterOccasion?TICKET_TYPE=CONCERT_CLUB&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=1000
 
 
+With selected Occasion you can create a pdf ticket with a qr-code.
 
 Ticket-order creation example:
 
@@ -82,6 +85,7 @@ Ticket-order creation example:
 	    "bankAccount": 2548870,
 	    "currency" : "usd"
 	}
+
 
 
 
