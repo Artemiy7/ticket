@@ -88,7 +88,7 @@ Result:
 
 
 
-With selected Occasion you can create a pdf ticket with a qr-code. Default currency is "usd" but you can use another currency instead of "usd" for example "uah". In this case service will make a request to config-server and it will convert the currency you specified into "usd" according to the current exchange rate.
+With selected Occasion you can create a pdf ticket with a qr-code. Default currency is "usd" but you can use another currency instead of "usd" for example "uah". In this case service will make a request to currency-exchange server and it will convert the currency you specified into "usd" according to the current exchange rate.
 e.g.:
 
 	POST localhost:8084/ticket/save
