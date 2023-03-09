@@ -25,7 +25,7 @@ public class TicketPdfGeneratorController {
     }
 
     @ApiOperation("Create pdf ticket with QR code from TicketOrder")
-    @PostMapping(value = "/generateTicketPdf", produces = {MediaType.APPLICATION_PDF_VALUE})
+    @PostMapping(value = "api/v1/generateTicketPdf", produces = {MediaType.APPLICATION_PDF_VALUE})
     public ResponseEntity<byte[]> createTicketPdf(@RequestBody TicketOrderDto ticketOrderDto) {
         HttpHeaders headers = new HttpHeaders();
         try {
