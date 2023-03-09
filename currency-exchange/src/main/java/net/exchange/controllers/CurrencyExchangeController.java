@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 
 @Api
 @RestController
-@RequestMapping("/exchange")
+@RequestMapping("api/v1/exchange")
 public class CurrencyExchangeController {
     private final CurrencyExchangeService currencyExchangeService;
 
