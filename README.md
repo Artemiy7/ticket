@@ -46,7 +46,7 @@ Execute to create Database:
 Within selection, the api will calculate the ticket price according to the seat and date.
 
 
-	GET localhost:8084//api/v1/occasion/1000000001
+	GET localhost:8084/api/v1/occasion/1000000001
 
 
 Result (reduced for readability):
