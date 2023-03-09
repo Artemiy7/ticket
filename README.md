@@ -44,7 +44,8 @@ Execute to create Database:
 
 
 
-Select occasion:
+Select occasion. Api will calculate ticket cost according on seat and date.
+Result:
 
 	GET localhost:8084//api/v1/occasion/1000000001
 
