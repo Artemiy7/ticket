@@ -38,7 +38,7 @@ public class OccasionController {
     }
 
     @ApiOperation(value = "Selects OccasionDto by id with OccasionSeatsDto and calculates OccasionSeatDto cost by date, seatType and number of booked seats", response = OccasionDto.class)
-    @RequestMapping(value = "/findOccasionById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id,
                                                        final HttpServletRequest httpServletRequest) {
         HttpHeaders headers = new HttpHeaders();
@@ -55,7 +55,7 @@ public class OccasionController {
     }
 
     @ApiOperation(value = "Select and filter OccasionDto without OccasionSeatDto", response = List.class)
-    @RequestMapping(value = "/filterOccasion", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/filters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OccasionDto>> filterOccasions(@RequestParam MultiValueMap<String, String> multiValueMap,
                                                              @RequestBody PaginationRequest paginationRequest,
                                                              final HttpServletRequest httpServletRequest) {
@@ -91,7 +91,7 @@ public class OccasionController {
     }
 
     @ApiOperation(value = "Returns number of filter parameters", response = HttpStatus.class)
-    @RequestMapping(value = "/fetchOccasionFilters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/fetchFilters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OccasionFilterType>> fetchOccasionFilters(final HttpServletRequest httpServletRequest) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("path", httpServletRequest.getRequestURI() + httpServletRequest.getQueryString());

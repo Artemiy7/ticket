@@ -13,7 +13,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
 
-@Api("Create TicketOrder")
+@Api("Create TicketOrder and TicketPdf")
 @RestController
 @RequestMapping("/ticket")
 public class TicketOrderRestController {
@@ -27,8 +27,8 @@ public class TicketOrderRestController {
         this.validatorUtils = validatorUtils;
     }
 
-    @ApiOperation("Create TicketOrder and return TicketOrderId")
-    @RequestMapping(value = "/save", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation("Create TicketOrder in the DB and return TicketOrderId")
+    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> createTicketOrder(@RequestBody TicketOrderDto ticketOrderDto) {
         validatorUtils.validationAfterSerialization(validatorUtils);
         ticketOrderDto.getCustomerTicketDto().forEach(validatorUtils::validationAfterSerialization);
@@ -43,7 +43,7 @@ public class TicketOrderRestController {
         return ResponseEntity.ok().body(ticketOrderId);
     }
 
-    @ApiOperation("Get pdf ticket for every CustomerTicketDto")
+    @ApiOperation("Get pdf ticket for every CustomerTicketDto by TicketOrderId")
     @RequestMapping(value = "/PDF/{orderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
     public ResponseEntity<byte[]> printTicketOrder(@PathVariable long orderId) throws HttpServerErrorException {
         HttpHeaders headers = new HttpHeaders();
