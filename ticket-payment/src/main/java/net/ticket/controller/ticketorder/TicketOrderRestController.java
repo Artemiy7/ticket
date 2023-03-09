@@ -44,11 +44,11 @@ public class TicketOrderRestController {
     }
 
     @ApiOperation("Get pdf ticket for every CustomerTicketDto by TicketOrderId")
-    @RequestMapping(value = "/PDF/{orderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
-    public ResponseEntity<byte[]> printTicketOrder(@PathVariable long orderId) throws HttpServerErrorException {
+    @RequestMapping(value = "/PDF/{ticketOrderId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> printTicketOrder(@PathVariable long ticketOrderId) throws HttpServerErrorException {
         HttpHeaders headers = new HttpHeaders();
         try {
-            ResponseEntity<byte[]> responseEntity = ticketOrderService.generatePdf(orderId);
+            ResponseEntity<byte[]> responseEntity = ticketOrderService.generatePdf(ticketOrderId);
             headers.add("Content-Disposition", String.valueOf(responseEntity.getHeaders().get("Content-Disposition")));
             LOGGER.info("Ticket printed");
             return ResponseEntity.ok()
