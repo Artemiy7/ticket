@@ -23,8 +23,10 @@ class ConcertClubOccasionCost implements OccasionCost {
     public BigDecimal calculateTicketCost(OccasionSeatDto occasionSeatDto, BigDecimal initialCost) throws CorruptedOccasionSeatException {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNumberOfSeats())
-                    .divide(initialCost)
-                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(concertClubOccasionCostConfig.getSeat(), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
+                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats())
+                            .multiply(concertClubOccasionCostConfig.getSeat())
+                            .multiply(concertClubOccasionCostConfig.getSeat())
+                            .multiply(concertClubOccasionCostConfig.getSeat()), 2, RoundingMode.HALF_UP)
                     .divide(concertClubOccasionCostConfig.getDate(), 2, RoundingMode.HALF_UP)
                     .divide(getSeatPlaceCoefficientBySeatPlaceTypeName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
             return bigDecimal;

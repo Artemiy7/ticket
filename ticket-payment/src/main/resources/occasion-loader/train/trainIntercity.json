@@ -5,7 +5,7 @@
   "occasionAddress": "Train station London Picadilly Circus",
     "ticketType": "TRAIN_INTERCITY",
   "active": true,
-  "initialPrice": 50.00,
+  "initialPrice": 5000.00,
   "occasionSeatLoaderDtoSet": [
     {
       "numberOfSeatTypes": 1000,

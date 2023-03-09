@@ -18,20 +18,20 @@
   }, {
     "cost" : null,
     "seat" : 0,
-    "seatPlaceType" : "CONCERT_CLUB_BALCONY",
-    "numberOfSeatTypes" : 30,
-    "from" : 21,
-    "to" : 30,
-    "booked" : false
-  }, {
-    "cost" : null,
-    "seat" : 0,
     "seatPlaceType" : "CONCERT_CLUB_FAN",
     "numberOfSeatTypes" : 20,
     "from" : 11,
     "to" : 20,
     "booked" : false
+  }, {
+    "cost" : null,
+    "seat" : 0,
+    "seatPlaceType" : "CONCERT_CLUB_BALCONY",
+    "numberOfSeatTypes" : 30,
+    "from" : 21,
+    "to" : 30,
+    "booked" : false
   } ],
-  "initialPrice" : 30.00,
+  "initialPrice" : 3000.00,
   "active" : true
 } ]

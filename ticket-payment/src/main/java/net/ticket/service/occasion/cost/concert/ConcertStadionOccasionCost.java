@@ -23,7 +23,11 @@ public class ConcertStadionOccasionCost implements OccasionCost {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNumberOfSeats())
                     .multiply(initialCost)
-                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(concertStadionOccasionCostConfig.getSeat(), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
+                    .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats())
+                            .multiply(concertStadionOccasionCostConfig.getSeat())
+                            .multiply(concertStadionOccasionCostConfig.getSeat())
+                            .multiply(concertStadionOccasionCostConfig.getSeat())
+                            .divide(concertStadionOccasionCostConfig.getSeat(), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
                     .divide(concertStadionOccasionCostConfig.getDate(), 2, RoundingMode.HALF_UP)
                     .divide(concertStadionOccasionCostConfig.getDate(), 2, RoundingMode.HALF_UP)
                     .divide(getSeatPlaceCoefficientBySeatPlaceTypeName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);

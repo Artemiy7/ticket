@@ -5,7 +5,7 @@
   "occasionAddress": "Hard Rock Cafe London Picadilly Circus",
   "ticketType": "CONCERT_STADION",
   "active": true,
-  "initialPrice": 30.00,
+  "initialPrice": 3000.00,
   "occasionSeatLoaderDtoSet": [
     {
       "numberOfSeatTypes": 1000,

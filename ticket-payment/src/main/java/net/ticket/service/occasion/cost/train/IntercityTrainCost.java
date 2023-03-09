@@ -24,6 +24,9 @@ public class IntercityTrainCost implements OccasionCost {
         try {
             BigDecimal bigDecimal = BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNumberOfSeats())
                     .multiply(initialCost)
+                    .multiply(initialCost)
+                    .multiply(initialCost)
+                    .multiply(initialCost)
                     .divide(BigDecimal.valueOf(occasionSeatDto.getOccasionDto().getNotBookedSeats()).divide(intercityTrainCostConfig.getSeat(), 2, RoundingMode.HALF_UP), 2, RoundingMode.HALF_UP)
                     .divide(getSeatPlaceCoefficientBySeatPlaceTypeName(occasionSeatDto.getSeatPlaceType().getSeatPlaceType()), 2, RoundingMode.HALF_UP);
             return bigDecimal;
