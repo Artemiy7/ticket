@@ -115,7 +115,7 @@ Api will return created TicketOrderId. It can be used generate pdf tiket with QR
 
 	GET localhost:8084/ticket/PDF/3000000001
 	
-ticket-paymnet service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer.
+ticket-payment service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer.
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
