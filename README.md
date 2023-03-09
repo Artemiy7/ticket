@@ -32,26 +32,33 @@ Execute to create Database:
 
 <h4 align="left">Endpoints:</h4>
 
-![image](https://user-images.githubusercontent.com/83453822/215362672-ea8275e8-f65d-4c8d-9178-3bd01f3b059d.png)
+![image](https://user-images.githubusercontent.com/83453822/224001257-e77e40ce-e6cc-445f-82c8-27f2ba412e05.png)
 
 
 <h4 align="left">Models:</h4>
 
-![image](https://user-images.githubusercontent.com/83453822/215362706-991fdc49-fec8-44b1-b1f6-6757e429e7af.png)
-![image](https://user-images.githubusercontent.com/83453822/215362733-1ef3357f-da74-47cf-b376-57e74bd49585.png)
+![image](https://user-images.githubusercontent.com/83453822/224001698-54d0937e-bba6-4a50-bde0-5f18a6400fb3.png)
+![image](https://user-images.githubusercontent.com/83453822/224001805-5c5a6149-f1c1-4cfc-8b03-0eec0cdaa00f.png)
+![image](https://user-images.githubusercontent.com/83453822/224001961-e2c962ac-d52b-4c6f-ba15-86d2d2f4bded.png)
+
 
 
 
 Select occasion:
 
-	GET localhost:8084/occasion/getOccasionById/1000000001
+	GET localhost:8084//api/v1/occasion/1000000001
+
+
+Result (reduced for readability):
+
+![image](https://user-images.githubusercontent.com/83453822/224006378-3640a4b2-c8bb-4d23-84bd-b9cccba28987.png)
 
 
 
 
 You can use filters and pagination to retrieve data you need:
 
-	GET localhost:8084/occasion/filterOccasion?TICKET_TYPE=CONCERT_CLUB&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=100
+	GET localhost:8084/api/v1/occasion/filters?TICKET_TYPE=TRAIN_INTERCITY&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=30
 	
 		
 	{
@@ -61,20 +68,28 @@ You can use filters and pagination to retrieve data you need:
   	    "sortingOrder": "ASC"
 	}
 
+Result:
+
+
+![image](https://user-images.githubusercontent.com/83453822/224006795-400074d2-309c-4c2f-8bf6-bb0c225114db.png)
 
 
 
 Fetch available filters:
 
-	GET localhost:8084/fetchOccasionFilters
+	localhost:8084/api/v1/occasion/fetchFilters
+
+Result:
+
+![image](https://user-images.githubusercontent.com/83453822/224007965-59175b58-8b30-4cbf-8d34-af13884d5d30.png)
+
 
 	
 
 
 
-
-
-With selected Occasion you can create a pdf ticket with a qr-code:
+With selected Occasion you can create a pdf ticket with a qr-code. Default currency is "usd" but you can use another currency instead of "usd" for example "uah". In this case service will make a request to config-server and it will convert the currency you specified into "usd" according to the current exchange rate.
+e.g.:
 
 	POST localhost:8084/ticket/save
 
@@ -83,7 +98,7 @@ With selected Occasion you can create a pdf ticket with a qr-code:
 	    "customerTicketDto": [{
 		 "firstName": "firstName2",
 		 "lastName" : "lastName2",
-		 "country"  : "Ukraine", 
+		 "country"  : "Fiji", 
 		 "seat" : 10,
 		 "amount" : "51.00",
 		 "seatPlaceType" : "CONCERT_CLUB_BALCONY"
@@ -91,23 +106,16 @@ With selected Occasion you can create a pdf ticket with a qr-code:
 	    "ticketType" : "CONCERT_CLUB",
 	    "occasionAddress" : "Hard Rock Cafe London Picadilly Circus",
 	    "occasionDate" : "2023-11-22 22:10",
-	    "occasionName" : "Concert Eric Clapton",
+	    "occasionName" : "Concert - Eric Clapton",
 	    "bankAccount": 2548870,
 	    "currency" : "usd"
 	}
 
-
-
-Default currency is "usd" but you can use another currency instead of "usd" for example "uah".
-In this case service will make a request to config-server and it will convert the currency you specified into "usd" according to the current exchange rate.
-
-
-To generate pdf tiket with QR-code:
+Api will return created TicketOrderId. It can be used generate pdf tiket with QR-code:
 
 	GET localhost:8084/ticket/PDF/3000000001
 	
-ticket-paymnet service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer:
-
+ticket-paymnet service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer.
 
 ![image](https://user-images.githubusercontent.com/83453822/215364843-ccd59b68-43ab-443b-a734-fb157196122a.png)
 
@@ -117,8 +125,7 @@ ticket-paymnet service will read TicketOrder from DB and will perform a request 
 <h3 align="left">pdf-generator:</h3>
 
 <h4 align="left">Endpoints and Models:</h4>
-
-![image](https://user-images.githubusercontent.com/83453822/215364006-91baeb2b-b56e-43eb-bf6f-a584665d80a1.png)
+![image](https://user-images.githubusercontent.com/83453822/224009913-ec0e07ce-810a-4d18-ab3c-105acbfb287d.png)
 
 
 
