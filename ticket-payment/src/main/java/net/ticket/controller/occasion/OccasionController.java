@@ -25,7 +25,7 @@ import java.util.*;
 
 @Api(value = "Performs occasion operations(select, filter)")
 @RestController
-@RequestMapping("/occasion")
+@RequestMapping("api/v1/occasion")
 public class OccasionController {
     private final static Logger LOGGER = LoggerFactory.getLogger(OccasionController.class);
     private final OccasionService occasionService;

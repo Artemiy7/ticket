@@ -15,7 +15,7 @@ import org.springframework.web.client.HttpServerErrorException;
 
 @Api("Create TicketOrder and TicketPdf")
 @RestController
-@RequestMapping("/ticket")
+@RequestMapping("api/v1/ticket")
 public class TicketOrderRestController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TicketOrderRestController.class);
     private final TicketOrderService ticketOrderService;
