@@ -71,7 +71,7 @@ You can use filters and pagination to retrieve data you need:
 Result:
 
 
-![image](https://user-images.githubusercontent.com/83453822/224006795-400074d2-309c-4c2f-8bf6-bb0c225114db.png)
+![image](https://user-images.githubusercontent.com/83453822/224021064-6983236e-c778-435e-a2d2-816e98ab651e.png)
 
 
 
@@ -125,6 +125,7 @@ ticket-paymnet service will read TicketOrder from DB and will perform a request 
 <h3 align="left">pdf-generator:</h3>
 
 <h4 align="left">Endpoints and Models:</h4>
+
 ![image](https://user-images.githubusercontent.com/83453822/224009913-ec0e07ce-810a-4d18-ab3c-105acbfb287d.png)
 
 
@@ -134,7 +135,7 @@ ticket-paymnet service will read TicketOrder from DB and will perform a request 
 
 <h4 align="left">Endpoints and Models:</h4>
 
-![image](https://user-images.githubusercontent.com/83453822/215364363-a69887ac-53a4-423f-a2ed-3dbe034a2e5b.png)
+![image](https://user-images.githubusercontent.com/83453822/224015518-75a44bb6-bdee-4697-81ae-0f4a147d2f47.png)
 
 
 
