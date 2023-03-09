@@ -19,7 +19,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -45,7 +44,6 @@ public class OccasionController {
         headers.add("path", httpServletRequest.getRequestURI());
         OccasionDto occasionDto = occasionService.findOccasionWithOccasionSeats(id).orElseThrow(() -> new NoSuchOccasionException("No such OccasionEntity " + id));
         LOGGER.info("OccasionEntity found " + id);
-        occasionDto.getOccasionSeatDto().forEach(occasionSeatDto -> occasionSeatDto.setCost(BigDecimal.ZERO));
         validatorUtils.validationBeforeDeserialization(occasionDto);
         occasionDto.getOccasionSeatDto().forEach(validatorUtils::validationBeforeDeserialization);
         return ResponseEntity.ok()
@@ -63,7 +61,7 @@ public class OccasionController {
         headers.add("path", httpServletRequest.getRequestURI() + httpServletRequest.getQueryString());
 
         if (multiValueMap.isEmpty()) {
-            LOGGER.error("No such OccasionS in dataBase");
+            LOGGER.error("No such Occasions in dataBase");
             headers.add("OccasionFilter-message", "Filter is absent");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                                  .headers(headers)
@@ -90,7 +88,7 @@ public class OccasionController {
         }
     }
 
-    @ApiOperation(value = "Returns number of filter parameters", response = HttpStatus.class)
+    @ApiOperation(value = "Returns number of filter parameters")
     @RequestMapping(value = "/fetchFilters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OccasionFilterType>> fetchOccasionFilters(final HttpServletRequest httpServletRequest) {
         HttpHeaders headers = new HttpHeaders();

@@ -8,20 +8,26 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="config-server" />
+        <module name="pdf-generator" />
+        <module name="currency-exchange" />
         <module name="ticket-payment" />
         <module name="discovery-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="config-server" target="17" />
+      <module name="currency-exchange" target="11" />
       <module name="discovery-service" target="14" />
+      <module name="pdf-generator" target="11" />
       <module name="ticket-payment" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="config-server" options="-parameters" />
+      <module name="currency-exchange" options="-parameters" />
       <module name="discovery-service" options="-parameters" />
+      <module name="pdf-generator" options="-parameters" />
       <module name="ticket-payment" options="-parameters" />
     </option>
   </component>

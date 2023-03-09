@@ -6,6 +6,8 @@
         <option value="$PROJECT_DIR$/ticket-payment/pom.xml" />
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
         <option value="$PROJECT_DIR$/discovery-service/pom.xml" />
+        <option value="$PROJECT_DIR$/pdf-generator/pom.xml" />
+        <option value="$PROJECT_DIR$/currency-exchange/pom.xml" />
       </list>
     </option>
   </component>
