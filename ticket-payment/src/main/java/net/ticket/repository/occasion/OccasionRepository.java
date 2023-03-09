@@ -89,7 +89,7 @@ public class OccasionRepository {
         Query query = entityManager.createNativeQuery("SELECT COUNT(os.OccasionId) FROM OccasionSeat os WHERE os.OccasionId=:OccasionId AND os.IsBooked=:IsBooked");
         query.setParameter("OccasionId", occasionEntity.getOccasionId());
         query.setParameter("IsBooked", false);
-        return (short) query.getFirstResult();
+        return Short.parseShort(query.getSingleResult().toString());
     }
 
     public void persistOccasion(OccasionEntity occasionEntity) {
