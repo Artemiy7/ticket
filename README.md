@@ -60,7 +60,7 @@ Result (reduced for readability):
 
 You can use filters and pagination to retrieve data you need:
 
-	GET localhost:8084/api/v1/occasion/filters?TICKET_TYPE=TRAIN_INTERCITY&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=30
+	GET localhost:8084/api/v1/occasion?TICKET_TYPE=TRAIN_INTERCITY&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=30
 	
 		
 	{
@@ -79,7 +79,7 @@ Result:
 
 Fetch available filters:
 
-	localhost:8084/api/v1/occasion/fetchFilters
+	localhost:8084/api/v1/occasion/filters
 
 Result:
 
