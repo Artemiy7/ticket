@@ -37,4 +37,18 @@ public class OccasionSeatRepository {
         query.setParameter("Seat", customerTicketDto.getSeat());
         query.executeUpdate();
     }
+
+    public int countNotBookedSeats(OccasionEntity occasionEntity, CustomerTicketDto customerTicketDto) {
+        Query query = entityManager.createNativeQuery("SELECT count(OccasionId) FROM OccasionSeat os WHERE" +
+                " os.OccasionId=:OccasionId" +
+                " AND os.IsBooked=:IsBooked" +
+                " AND os.Seat=:Seat", OccasionSeatEntity.class);
+        query.setParameter("OccasionId", occasionEntity.getOccasionId());
+        query.setParameter("IsBooked", false);
+        query.setParameter("Seat", customerTicketDto.getSeat());
+        if (query.getResultList().size() > 1) {
+            throw new RuntimeException("OccasionSeat is corrupted");
+        }
+        return query.getFirstResult();
+    }
 }
