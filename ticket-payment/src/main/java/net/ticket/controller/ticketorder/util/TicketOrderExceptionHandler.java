@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @ControllerAdvice(basePackageClasses = TicketOrderRestController.class)
 public class TicketOrderExceptionHandler {
 
-    @ExceptionHandler({NoSuchOccasionException.class, NoSuchOccasionSeatException.class, OccasionSeatIsBookedException.class, CorruptedOccasionException.class})
+    @ExceptionHandler({NoSuchOccasionSeatException.class, OccasionSeatIsBookedException.class, CorruptedOccasionException.class})
     public ResponseEntity<ErrorResponse> handleOccasionException(OccasionException occasionException, WebRequest request) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Occasion-Error-Message", occasionException.getMessage());

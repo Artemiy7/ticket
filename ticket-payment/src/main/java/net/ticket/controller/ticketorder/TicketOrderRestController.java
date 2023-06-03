@@ -2,8 +2,10 @@ package net.ticket.controller.ticketorder;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.ticket.constant.enums.message.ResponseMessage;
 import net.ticket.dto.ticketorder.CustomerTicketDto;
 import net.ticket.dto.ticketorder.TicketOrderDto;
+import net.ticket.response.error.ErrorResponse;
 import net.ticket.service.ticketorder.TicketOrderService;
 import net.ticket.ticketexception.occasion.*;
 import net.ticket.util.ValidatorUtils;
@@ -12,6 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpServerErrorException;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Api("Create TicketOrder and TicketPdf")
 @RestController
@@ -38,7 +43,18 @@ public class TicketOrderRestController {
                 throw new CorruptedOccasionException("No such SeatPlaceType " + customerTicketDto.getSeatPlaceType() + " in this TicketType " + customerTicketDto.getTicketOrderDto().getTicketType());
             }
         }
-        long ticketOrderId = ticketOrderService.createTicket(ticketOrderDto);
+        Optional<Long> resultOptional = ticketOrderService.createTicket(ticketOrderDto);
+
+        if (resultOptional.isEmpty()) {
+            return new ResponseEntity(ErrorResponse.builder()
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .message(ResponseMessage.OCCASION_NOT_FOUND.getMessage())
+                    .localDateTime(LocalDateTime.now())
+                    .path("/create")
+                    .build(), HttpStatus.BAD_REQUEST);
+        }
+
+        long ticketOrderId = resultOptional.get();
         LOGGER.info("TicketOrder created " + ticketOrderId);
         return ResponseEntity.ok().body(ticketOrderId);
     }

@@ -12,7 +12,6 @@ import net.ticket.response.currencyexchange.CurrencyExchangeResponse;
 import net.ticket.client.bank.BankSimulatorClient;
 import net.ticket.client.currencyexchange.CurrencyExchangeClient;
 import net.ticket.client.pdfgenerator.PdfGeneratorClient;
-import net.ticket.service.occasion.OccasionService;
 import net.ticket.ticketexception.bank.InvalidBankAccount;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.ticketexception.occasion.NoSuchOccasionSeatException;
@@ -29,9 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpServerErrorException;
 
 import javax.persistence.NoResultException;
 import java.util.Optional;
@@ -79,11 +76,11 @@ public class TicketOrderServiceImpl implements TicketOrderService {
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public long createTicket(TicketOrderDto ticketOrderDto) throws NoResultException, NoSuchOccasionException,
+    public Optional<Long> createTicket(TicketOrderDto ticketOrderDto) throws NoResultException, NoSuchOccasionException,
             OccasionSeatIsBookedException, NoSuchBankAccount, BankServerError, NotEnoughAmountForPayment, NoSuchOccasionSeatException, InvalidBankAccount {
         Optional<OccasionEntity> occasionEntityOptional = occasionRepository.findOccasionByNameAndDateAndAddress(ticketOrderDto);
         if (occasionEntityOptional.isEmpty())
-            throw new NoSuchOccasionException("No such Occasion " + ticketOrderDto.getOccasionName());
+            return Optional.empty();
 
         for(CustomerTicketDto customerTicketDto : ticketOrderDto.getCustomerTicketDto()) {
             OccasionSeatEntity occasionSeatEntity =
@@ -121,12 +118,12 @@ public class TicketOrderServiceImpl implements TicketOrderService {
                 " ticketOrderId: " + ticketOrderEntity.getTicketOrderId() +
                 " ticketType " + ticketOrderEntity.getTicketType() +
                 " ticketOrderId " + ticketOrderEntity.getTicketOrderId());
-        return ticketOrderEntity.getTicketOrderId();
+        return Optional.of(ticketOrderEntity.getTicketOrderId());
     }
 
     @Transactional(readOnly = true)
     @Override
-    public ResponseEntity<byte[]> generatePdf(long ticketOrderId) throws NoSuchTicketOrderEntityException, NullPointerException, HttpServerErrorException {
+    public ResponseEntity<byte[]> generatePdf(long ticketOrderId) {
         TicketOrderEntity ticketOrderEntity = ticketOrderRepository.findTicketOrder(ticketOrderId)
                                                                    .orElseThrow(() -> new NoSuchTicketOrderEntityException("No such TicketOrder " + ticketOrderId));
         TicketOrderDto ticketOrderDto = ticketOrderEntityToTicketOrderDtoTransformer.transform(ticketOrderEntity);
