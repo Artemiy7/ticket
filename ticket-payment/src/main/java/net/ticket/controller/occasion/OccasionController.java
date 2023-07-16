@@ -2,9 +2,9 @@ package net.ticket.controller.occasion;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.ticket.domain.pagination.PageAndSortingObject;
 import net.ticket.dto.occasion.OccasionDto;
-import net.ticket.request.pagination.PaginationRequest;
-import net.ticket.constant.enums.filtertype.OccasionFilterType;
+import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
 import net.ticket.response.error.ErrorResponse;
 import net.ticket.service.occasion.OccasionService;
 import net.ticket.ticketexception.occasion.NoSuchOccasionException;
@@ -22,9 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.*;
 
-@Api(value = "Performs occasion operations(select, filter)")
+@Api(value = "Performs occasion operations")
 @RestController
-@RequestMapping("api/v1/occasion")
+@RequestMapping("api/v1/occasions")
 public class OccasionController {
     private final static Logger LOGGER = LoggerFactory.getLogger(OccasionController.class);
     private final OccasionService occasionService;
@@ -38,65 +38,59 @@ public class OccasionController {
 
     @ApiOperation(value = "Selects OccasionDto by id with OccasionSeatsDto and calculates OccasionSeatDto cost by date, seatType and number of booked seats", response = OccasionDto.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id,
-                                                       final HttpServletRequest httpServletRequest) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("path", httpServletRequest.getRequestURI());
+    public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id) {
         OccasionDto occasionDto = occasionService.findOccasionWithOccasionSeats(id).orElseThrow(() -> new NoSuchOccasionException("No such OccasionEntity " + id));
         LOGGER.info("OccasionEntity found " + id);
         validatorUtils.validationBeforeDeserialization(occasionDto);
         occasionDto.getOccasionSeatDto().forEach(validatorUtils::validationBeforeDeserialization);
         return ResponseEntity.ok()
-                             .headers(headers)
                              .contentType(MediaType.APPLICATION_JSON)
                              .body(occasionDto);
     }
 
     @ApiOperation(value = "Select and filter OccasionDto without OccasionSeatDto", response = List.class)
-    @RequestMapping(value = "/filters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<OccasionDto>> filterOccasions(@RequestParam MultiValueMap<String, String> multiValueMap,
-                                                             @RequestBody PaginationRequest paginationRequest,
-                                                             final HttpServletRequest httpServletRequest) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("path", httpServletRequest.getRequestURI() + httpServletRequest.getQueryString());
+    @GetMapping
+    public ResponseEntity<List<OccasionDto>> findOccasions(@RequestParam(defaultValue = "10") int size,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "occasionTime", name = "sorting_field") String sortField,
+                                                           @RequestParam(defaultValue = "ASC", name = "sorting_order") String sortingOrder,
+                                                           @RequestParam MultiValueMap<String, String> searchMap,
+                                                           final HttpServletRequest httpServletRequest) {
 
-        if (multiValueMap.isEmpty()) {
-            LOGGER.error("No such Occasions in dataBase");
-            headers.add("OccasionFilter-message", "Filter is absent");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                 .headers(headers)
-                                 .build();
-        }
+        String requestPath = httpServletRequest.getRequestURI() + "/" + httpServletRequest.getQueryString();
         try {
-            Optional<List<OccasionDto>> occasionDtoList = occasionService.findFilteredOccasions(multiValueMap, paginationRequest);
-            LOGGER.info("Occasions found ".concat(String.valueOf(occasionDtoList.get().size())));
-            occasionDtoList.get().forEach(validatorUtils::validationBeforeDeserialization);
+            PageAndSortingObject pageAndSortingObject = PageAndSortingObject.createObject(size, page, sortField, PageAndSortingObject.SortingOrder.valueOf(sortingOrder));
+            Optional<List<OccasionDto>> occasionDtoList = occasionService.findOccasionsByParameters(searchMap, pageAndSortingObject);
+            if (occasionDtoList.isEmpty()) {
+                return new ResponseEntity(ErrorResponse.builder()
+                        .httpStatus(HttpStatus.NOT_FOUND)
+                        .message("No OccasionEntity was found")
+                        .localDateTime(LocalDateTime.now())
+                        .path(requestPath)
+                        .build(), HttpStatus.NOT_FOUND);
+            }
+            LOGGER.info("Occasions found " + occasionDtoList.get().size());
             return ResponseEntity.ok()
-                                 .headers(headers)
                                  .contentType(MediaType.APPLICATION_JSON)
                                  .body(occasionDtoList.get());
 
         } catch (IllegalArgumentException e) {
+            HttpHeaders headers = new HttpHeaders();
             LOGGER.error("Wrong filter type or value " + e.getMessage());
-            headers.add("Occasion-Filter-Error-Message", "Wrong filter type or value " + e.getMessage());
+            headers.add("Error-Message", "Wrong query type or value " + e.getMessage());
             return new ResponseEntity(ErrorResponse.builder()
                                                    .httpStatus(HttpStatus.BAD_REQUEST)
                                                    .message(e.getMessage())
                                                    .localDateTime(LocalDateTime.now())
-                                                   .path("/occasion/filterOccasion")
+                                                   .path(requestPath)
                                                    .build(), headers, HttpStatus.BAD_REQUEST);
         }
     }
 
     @ApiOperation(value = "Returns number of filter parameters")
     @RequestMapping(value = "/fetchFilters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<OccasionFilterType>> fetchOccasionFilters(final HttpServletRequest httpServletRequest) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("path", httpServletRequest.getRequestURI() + httpServletRequest.getQueryString());
+    public ResponseEntity<List<OccasionQueryParameterOperation>> fetchOccasionFilters() {
         return ResponseEntity.ok()
-                             .headers(headers)
-                             .body(OccasionFilterType.getOccasionFilterTypeList());
+                             .body(OccasionQueryParameterOperation.getOccasionFilterTypeList());
     }
-
-
 }

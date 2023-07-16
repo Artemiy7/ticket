@@ -1,12 +1,11 @@
 package net.ticket.service.occasion;
 
+import net.ticket.domain.pagination.PageAndSortingObject;
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.repository.occasion.OccasionRepository;
-import net.ticket.repository.occasion.filter.OccasionFilter;
 import net.ticket.dto.occasion.OccasionDto;
-import net.ticket.request.pagination.PaginationRequest;
-import net.ticket.entity.occasion.OccasionEntity;
-import net.ticket.constant.enums.filtertype.OccasionFilterType;
+import net.ticket.domain.entity.occasion.OccasionEntity;
+import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
 import net.ticket.service.occasion.cost.OccasionCost;
 import net.ticket.ticketexception.occasion.*;
 import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoNoSeatsTransformer;
@@ -16,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -104,43 +104,40 @@ public class OccasionServiceImpl implements OccasionService {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<List<OccasionDto>> findFilteredOccasions(Map<String, List<String>> filterMap, PaginationRequest paginationRequest) {
-        Map<OccasionFilter, List<String>> occasionFilterMap = new HashMap<>();
+    public Optional<List<OccasionDto>> findOccasionsByParameters(MultiValueMap<String, String> searchMap, PageAndSortingObject pageAndSortingObject) {
+        Map<OccasionQueryParameterOperation, List<String>> occasionParameterMap = new HashMap<>();
 
-        for (Map.Entry<String,List<String>> entry : filterMap.entrySet()) {
-            OccasionFilter occasionFilter = OccasionFilter.getBeanByName(OccasionFilterType.valueOf(entry.getKey()).getFilterType());
-            if (occasionFilter.getIsRange() && entry.getValue().size() > 1) {
-                LOGGER.error("Double same type FROM/TO request ");
-                throw new OccasionFilterException("Double same type FROM/TO request");
+        for (Map.Entry<String, List<String>> entry : searchMap.entrySet()) {
+            OccasionQueryParameterOperation parameterOperation = OccasionQueryParameterOperation.getOccasionQueryParameterOperation(entry.getKey());
+            if (parameterOperation == null) {
+                LOGGER.error("No such parameter " + entry.getKey());
+                throw new OccasionFilterException("No such parameter " + entry.getKey());
             }
-            occasionFilterMap.put(occasionFilter, entry.getValue());
+            if (parameterOperation.isSingle() && entry.getValue().size() > 1) {
+                LOGGER.error("Double type for " + parameterOperation.getQueryParameterType());
+                throw new OccasionFilterException("Double type for " + parameterOperation.getQueryParameterType());
+            }
+            occasionParameterMap.put(parameterOperation, entry.getValue());
         }
 
-        Optional<List<OccasionEntity>> occasionEntityListOptional = occasionRepository.findOccasionsByFilter(occasionFilterMap, paginationRequest.getSize(), paginationRequest.getResultOrder());
+        Optional<List<OccasionEntity>> occasionEntityListOptional = occasionRepository.findOccasionsByParametersMap(occasionParameterMap, pageAndSortingObject);
 
-        if (occasionEntityListOptional.isEmpty() || occasionEntityListOptional.get().isEmpty()) {
-            LOGGER.error("No OccasionEntity was found by filter");
-            throw new NoSuchOccasionException("No such OccasionEntity");
+        if (occasionEntityListOptional.isEmpty()) {
+            LOGGER.info("No OccasionEntity was found");
+            return Optional.empty();
         }
 
         occasionEntityListOptional.get().forEach(occasionEntity -> {
             checkOccasionEntityNumberOfSeats(occasionEntity);
             checkOccasionEntityTicketTypes(occasionEntity);
-            if (!paginationRequest.isWithOutdated())
-                checkOccasionEntityTime(occasionEntity);
         });
-
-        if (paginationRequest.getSortingOrder() == PaginationRequest.SortingOrder.DESC)
-            Collections.sort(occasionEntityListOptional.get(), Collections.reverseOrder());
-        else
-            Collections.sort(occasionEntityListOptional.get());
 
         return occasionEntityListOptional.map(occasionEntityList -> occasionEntityList
                         .stream()
                         .map(occasionEntity ->
                             occasionEntityToOccasionDtoNoSeatsTransformer.transform(occasionEntity)
-                                                                         .setNotBookedSeats(occasionRepository.findNotBookedSeatForOccasion(occasionEntity))
-                                                                         .setDaysToOccasion(calculateDaysToOccasion(occasionEntity.getOccasionTime())))
+                                    .setNotBookedSeats(occasionRepository.findNotBookedSeatForOccasion(occasionEntity))
+                                    .setDaysToOccasion(calculateDaysToOccasion(occasionEntity.getOccasionTime())))
                         .collect(Collectors.toList()));
     }
 
