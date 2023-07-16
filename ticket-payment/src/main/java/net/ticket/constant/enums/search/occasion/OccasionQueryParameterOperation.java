@@ -15,12 +15,28 @@ import java.util.concurrent.ConcurrentHashMap;
 public enum OccasionQueryParameterOperation implements OccasionFilter {
     @JsonProperty("ticket_type")
     TICKET_TYPE("ticket_type", false, (root, query, builder, join, requestParam) -> {
-        return builder.equal(root.get("ticketType"),TicketType.valueOf(requestParam));
+        return builder.equal(root.get("ticketType"), TicketType.valueOf(requestParam));
     }),
 
     @JsonProperty("occasion_name")
     OCCASION_NAME("occasion_name", false, (root, query, builder, join, requestParam) -> {
-        return builder.equal(root.get("ticketType"),TicketType.valueOf(requestParam));
+        return builder.equal(root.get("occasionName"), requestParam);
+    }),
+
+    @JsonProperty("occasion_name")
+    OCCASION_ADDRESS("occasion_address", false, (root, query, builder, join, requestParam) -> {
+        return builder.equal(root.get("occasionAddress"), requestParam);
+    }),
+
+
+    @JsonProperty("occasion_seats_from")
+    OCCASION_SEATS_FROM("occasion_seats_from", true, (root, query, builder, join, requestParam) -> {
+        return builder.greaterThanOrEqualTo(root.get("numberOfSeats"), Integer.valueOf(requestParam));
+    }),
+
+    @JsonProperty("occasion_seats_to")
+    OCCASION_SEATS_TO("occasion_seats_to", true, (root, query, builder, join, requestParam) -> {
+        return builder.lessThanOrEqualTo(root.get("numberOfSeats"), Integer.valueOf(requestParam));
     }),
 
     @JsonProperty("occasion_date_from")

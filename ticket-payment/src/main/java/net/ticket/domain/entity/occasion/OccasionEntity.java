@@ -1,4 +1,4 @@
-package net.ticket.entity.occasion;
+package net.ticket.domain.entity.occasion;
 
 import lombok.*;
 import net.ticket.constant.enums.ticket.TicketType;
@@ -30,7 +30,7 @@ public class OccasionEntity implements Comparable<OccasionEntity>, Serializable 
     private LocalDateTime occasionTime;
 
     @Column(name = "NumberOfSeats", nullable = false)
-    private short numberOfSeats;
+    private int numberOfSeats;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "TicketType", nullable = false)

@@ -47,9 +47,9 @@ public class OccasionRepository {
         criteriaQuery.where(criteriaBuilder.and(searchRestrictions.toArray(new Predicate[searchRestrictions.size()])));
 
         if (pageAndSortingObject.getSortingOrder().equals(PageAndSortingObject.SortingOrder.ASC))
-            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(pageAndSortingObject.getSortField())));
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(pageAndSortingObject.getSortingField())));
         else
-            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(pageAndSortingObject.getSortField())));
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(pageAndSortingObject.getSortingField())));
 
         TypedQuery<OccasionEntity> query = entityManager.createQuery(criteriaQuery);
         query.setFirstResult(pageAndSortingObject.getPage());

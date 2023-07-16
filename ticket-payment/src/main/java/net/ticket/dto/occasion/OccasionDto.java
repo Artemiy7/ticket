@@ -24,10 +24,11 @@ public class OccasionDto {
     @NonNull
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime occasionTime;
-    private short daysToOccasion;
-    private short notBookedSeats;
+    private int daysToOccasion;
     @Positive
-    private short numberOfSeats;
+    private int notBookedSeats;
+    @Positive
+    private int numberOfSeats;
     @Pattern(regexp = RegexConstants.OCCASION_ADDRESS)
     @NotBlank(message = "occasionAddress cannot be blank or null")
     private String occasionAddress;
@@ -36,12 +37,12 @@ public class OccasionDto {
     @JsonManagedReference
     private Set<OccasionSeatDto> occasionSeatDto;
 
-    public OccasionDto setNotBookedSeats(short notBookedSeats) {
+    public OccasionDto setNotBookedSeats(int notBookedSeats) {
         this.notBookedSeats = notBookedSeats;
         return this;
     }
 
-    public OccasionDto setDaysToOccasion(short daysToOccasion) {
+    public OccasionDto setDaysToOccasion(int daysToOccasion) {
         this.daysToOccasion = daysToOccasion;
         return this;
     }

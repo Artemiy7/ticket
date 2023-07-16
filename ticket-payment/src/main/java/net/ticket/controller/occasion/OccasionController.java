@@ -52,14 +52,14 @@ public class OccasionController {
     @GetMapping
     public ResponseEntity<List<OccasionDto>> findOccasions(@RequestParam(defaultValue = "10") int size,
                                                            @RequestParam(defaultValue = "0") int page,
-                                                           @RequestParam(defaultValue = "occasionTime", name = "sorting_field") String sortField,
+                                                           @RequestParam(defaultValue = "occasionTime", name = "sorting_field") String sortingField,
                                                            @RequestParam(defaultValue = "ASC", name = "sorting_order") String sortingOrder,
                                                            @RequestParam MultiValueMap<String, String> searchMap,
                                                            final HttpServletRequest httpServletRequest) {
 
         String requestPath = httpServletRequest.getRequestURI() + "/" + httpServletRequest.getQueryString();
         try {
-            PageAndSortingObject pageAndSortingObject = PageAndSortingObject.createObject(size, page, sortField, PageAndSortingObject.SortingOrder.valueOf(sortingOrder));
+            PageAndSortingObject pageAndSortingObject = PageAndSortingObject.createObject(size, page, sortingField, PageAndSortingObject.SortingOrder.valueOf(sortingOrder));
             Optional<List<OccasionDto>> occasionDtoList = occasionService.findOccasionsByParameters(searchMap, pageAndSortingObject);
             if (occasionDtoList.isEmpty()) {
                 return new ResponseEntity(ErrorResponse.builder()

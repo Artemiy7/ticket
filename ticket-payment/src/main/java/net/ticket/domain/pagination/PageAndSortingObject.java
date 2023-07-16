@@ -7,18 +7,18 @@ import lombok.Getter;
 public class PageAndSortingObject {
     private int size;
     private int page;
-    private String sortField;
+    private String sortingField;
     private SortingOrder sortingOrder;
 
-    public PageAndSortingObject(int size, int page, String sortField, SortingOrder sortingOrder) {
+    public PageAndSortingObject(int size, int page, String sortingField, SortingOrder sortingOrder) {
         this.size = size;
         this.page = page;
-        this.sortField = sortField;
+        this.sortingField = sortingField;
         this.sortingOrder = sortingOrder;
     }
 
-    public static PageAndSortingObject createObject(int size, int page, String sortField, SortingOrder sortingOrder) {
-        return new PageAndSortingObject(size, page, sortField, sortingOrder);
+    public static PageAndSortingObject createObject(int size, int page, String sortingField, SortingOrder sortingOrder) {
+        return new PageAndSortingObject(size, page, sortingField, sortingOrder);
     }
 
     public enum SortingOrder {
