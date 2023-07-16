@@ -1,15 +1,14 @@
 package net.ticket.repository.occasion;
 
-import net.ticket.repository.occasion.filter.OccasionFilter;
+import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
+import net.ticket.domain.entity.occasion.OccasionSeatEntity;
+import net.ticket.domain.pagination.PageAndSortingObject;
 import net.ticket.dto.ticketorder.TicketOrderDto;
-import net.ticket.entity.occasion.OccasionEntity;
+import net.ticket.domain.entity.occasion.OccasionEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,37 +19,41 @@ import java.util.Optional;
 public class OccasionRepository {
     @PersistenceContext
     EntityManager entityManager;
-    private final String findOccasionByNameAndDateAndAddressQuery = "SELECT * FROM Occasion os " +
-                                                                    "WHERE os.OccasionName=:OccasionName " +
-                                                                    "AND os.OccasionTime=:OccasionTime " +
-                                                                    "AND os.TicketType=:TicketType " +
-                                                                    "AND os.OccasionAddress=:OccasionAddress";
+    private final String findOccasionByNameAndDateAndAddressQuery = "SELECT os FROM Occasion os WHERE os.OccasionName=:OccasionName AND os.OccasionTime=:OccasionTime " +
+                                                                    "AND os.TicketType=:TicketType AND os.OccasionAddress=:OccasionAddress";
 
     public Optional<OccasionEntity> getOccasionById(long id) {
         return Optional.ofNullable(entityManager.find(OccasionEntity.class, id));
     }
 
-    public Optional<List<OccasionEntity>> findOccasionsByFilter(Map<OccasionFilter, List<String>> occasionFilterMap, short size, short resultOrder) throws IllegalArgumentException {
-        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<OccasionEntity> criteria = builder.createQuery(OccasionEntity.class);
-        Root<OccasionEntity> root = criteria.from(OccasionEntity.class);
-        List<Predicate> filterRestrictions = new ArrayList<>();
+    public Optional<List<OccasionEntity>> findOccasionsByParametersMap(Map<OccasionQueryParameterOperation, List<String>> occasionSearchMap, PageAndSortingObject pageAndSortingObject) throws IllegalArgumentException {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<OccasionEntity> criteriaQuery = criteriaBuilder.createQuery(OccasionEntity.class);
+        Root<OccasionEntity> root = criteriaQuery.from(OccasionEntity.class);
+        List<Predicate> searchRestrictions = new ArrayList<>();
+        Join<OccasionEntity, OccasionSeatEntity> join = null;
 
-        for (Map.Entry<OccasionFilter, List<String>> entry : occasionFilterMap.entrySet()) {
+        for (Map.Entry<OccasionQueryParameterOperation, List<String>> entry : occasionSearchMap.entrySet()) {
             if (entry.getValue().size() > 1) {
                 List<Predicate> sameTypePredicatesList = new ArrayList<>();
                 entry.getValue().forEach(value -> {
-                    sameTypePredicatesList.add(entry.getKey().filterOccasion(root, criteria, builder, value));
+                    sameTypePredicatesList.add(entry.getKey().filterOccasion(root, criteriaQuery, criteriaBuilder, join, value));
                 });
-                filterRestrictions.add(builder.or(sameTypePredicatesList.toArray(new Predicate[sameTypePredicatesList.size()])));
+                searchRestrictions.add(criteriaBuilder.or(sameTypePredicatesList.toArray(new Predicate[sameTypePredicatesList.size()])));
             } else {
-                filterRestrictions.add(builder.and(entry.getKey().filterOccasion(root, criteria, builder, entry.getValue().get(0))));
+                searchRestrictions.add(criteriaBuilder.and(entry.getKey().filterOccasion(root, criteriaQuery, criteriaBuilder, join, entry.getValue().get(0))));
             }
         }
-        criteria.where(builder.and(filterRestrictions.toArray(new Predicate[filterRestrictions.size()])));
-        TypedQuery<OccasionEntity> query = entityManager.createQuery(criteria);
-        query.setFirstResult(resultOrder);
-        query.setMaxResults(size);
+        criteriaQuery.where(criteriaBuilder.and(searchRestrictions.toArray(new Predicate[searchRestrictions.size()])));
+
+        if (pageAndSortingObject.getSortingOrder().equals(PageAndSortingObject.SortingOrder.ASC))
+            criteriaQuery.orderBy(criteriaBuilder.asc(root.get(pageAndSortingObject.getSortField())));
+        else
+            criteriaQuery.orderBy(criteriaBuilder.desc(root.get(pageAndSortingObject.getSortField())));
+
+        TypedQuery<OccasionEntity> query = entityManager.createQuery(criteriaQuery);
+        query.setFirstResult(pageAndSortingObject.getPage());
+        query.setMaxResults(pageAndSortingObject.getSize());
 
         List<OccasionEntity> resultList = query.getResultList();
         if (resultList.isEmpty()) {
