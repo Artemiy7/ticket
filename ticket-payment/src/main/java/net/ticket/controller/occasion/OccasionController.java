@@ -38,8 +38,18 @@ public class OccasionController {
 
     @ApiOperation(value = "Selects OccasionDto by id with OccasionSeatsDto and calculates OccasionSeatDto cost by date, seatType and number of booked seats", response = OccasionDto.class)
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id) {
-        OccasionDto occasionDto = occasionService.findOccasionWithOccasionSeats(id).orElseThrow(() -> new NoSuchOccasionException("No such OccasionEntity " + id));
+    public ResponseEntity<OccasionDto> getOccasionById(@PathVariable long id, final HttpServletRequest httpServletRequest) {
+        Optional<OccasionDto> occasionDtoOptional = occasionService.findOccasionWithOccasionSeats(id);
+        if (occasionDtoOptional.isEmpty()) {
+            LOGGER.info("OccasionEntity not found " + id);
+            return new ResponseEntity(ErrorResponse.builder()
+                    .httpStatus(HttpStatus.NOT_FOUND)
+                    .message("OccasionEntity not found " + id)
+                    .localDateTime(LocalDateTime.now())
+                    .path(httpServletRequest.getRequestURI())
+                    .build(), HttpStatus.NOT_FOUND);
+        }
+        OccasionDto occasionDto = occasionDtoOptional.get();
         LOGGER.info("OccasionEntity found " + id);
         validatorUtils.validationBeforeDeserialization(occasionDto);
         occasionDto.getOccasionSeatDto().forEach(validatorUtils::validationBeforeDeserialization);
