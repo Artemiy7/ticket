@@ -1,6 +1,6 @@
 package net.ticket.repository.ticketorder;
 
-import net.ticket.entity.ticketorder.TicketOrderEntity;
+import net.ticket.domain.entity.ticketorder.TicketOrderEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

@@ -1,13 +1,13 @@
 package net.ticket.service.ticketorder;
 
-import net.ticket.entity.occasion.OccasionSeatEntity;
-import net.ticket.entity.ticketorder.TicketOrderEntity;
+import net.ticket.domain.entity.occasion.OccasionSeatEntity;
+import net.ticket.domain.entity.ticketorder.TicketOrderEntity;
 import net.ticket.repository.occasion.OccasionRepository;
 import net.ticket.repository.occasion.OccasionSeatRepository;
 import net.ticket.repository.ticketorder.TicketOrderRepository;
 import net.ticket.dto.ticketorder.CustomerTicketDto;
 import net.ticket.dto.ticketorder.TicketOrderDto;
-import net.ticket.entity.occasion.OccasionEntity;
+import net.ticket.domain.entity.occasion.OccasionEntity;
 import net.ticket.response.currencyexchange.CurrencyExchangeResponse;
 import net.ticket.client.bank.BankSimulatorClient;
 import net.ticket.client.currencyexchange.CurrencyExchangeClient;
@@ -84,14 +84,14 @@ public class TicketOrderServiceImpl implements TicketOrderService {
 
         for(CustomerTicketDto customerTicketDto : ticketOrderDto.getCustomerTicketDto()) {
             OccasionSeatEntity occasionSeatEntity =
-                    occasionSeatRepository.findOccasionSeats(occasionEntityOptional.get(),
+                    occasionSeatRepository.findOccasionSeatsByOccasionIdAndSeat(occasionEntityOptional.get(),
                             customerTicketDto).orElseThrow(() -> new NoSuchOccasionSeatException("OccasionSeat" + customerTicketDto.getSeat() +
                             " is not exist in occasion " + customerTicketDto.getTicketOrderDto().getOccasionName()));
             if (occasionSeatEntity.isBooked())
                 throw new OccasionSeatIsBookedException("OccasionSeat is booked " + occasionSeatEntity.getOccasionSeatId());
             customerTicketDto.setOccasionSeat(occasionSeatEntity);
         }
-        bankSimulatorClient.sendConfirmationRequestToBankAccount(ticketOrderDto.getBankAccount());
+        //bankSimulatorClient.sendConfirmationRequestToBankAccount(ticketOrderDto.getBankAccount());
 
         TicketOrderEntity ticketOrderEntity = ticketOrderDtoToTicketOrderEntityTransformer.transform(ticketOrderDto);
         ticketOrderRepository.saveTicketOrder(ticketOrderEntity);
@@ -106,12 +106,12 @@ public class TicketOrderServiceImpl implements TicketOrderService {
                                         defaultCurrency, customerDto.getAmount());
                         customerDto.setAmount(currencyExchangeResponse.getAmount());
                     }
-                    occasionSeatRepository.updateOccasionSeatIsBooked(occasionEntityOptional.get(), customerDto);
+                    occasionSeatRepository.updateOccasionSeatSetIsBooked(occasionEntityOptional.get(), customerDto);
                     LOGGER.info("Successfully updated OccasionSeat, seat: " + customerDto.getOccasionSeat().getOccasionEntity().getOccasionId() +
                             " OccasionId " + customerDto.getOccasionSeat().getOccasionSeatId());
                 });
 
-        if (bankSimulatorClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
+       // if (bankSimulatorClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
             ticketOrderEntity.setPaid(true);
 
         LOGGER.info("TicketOrder created successfully, bankAccount: " + ticketOrderEntity.getBankAccount() +

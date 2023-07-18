@@ -6,5 +6,5 @@ import javax.persistence.criteria.*;
 
 @FunctionalInterface
 public interface OccasionFilter {
-    Predicate filterOccasion(Root<OccasionEntity> root, CriteriaQuery<?> query, CriteriaBuilder builder, Join<OccasionEntity, ?> join, String requestParam) throws IllegalArgumentException;
+    Predicate filterOccasion(Root<OccasionEntity> root, CriteriaQuery<?> query, CriteriaBuilder builder, String requestParam) throws IllegalArgumentException;
 }
