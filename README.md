@@ -34,14 +34,17 @@ Execute to create Database:
 
 <h4 align="left">Endpoints:</h4>
 
-![image](https://user-images.githubusercontent.com/83453822/224001257-e77e40ce-e6cc-445f-82c8-27f2ba412e05.png)
+
+
+![image](https://github.com/Artemiy7/ticket/assets/83453822/5a06393f-cd39-4a71-b294-4e7083902746)
+
 
 
 <h4 align="left">Models:</h4>
 
-![image](https://github.com/Artemiy7/ticket/assets/83453822/6c8b8bb6-9377-45db-b17d-1d1bb2c37558)
-![image](https://user-images.githubusercontent.com/83453822/224001805-5c5a6149-f1c1-4cfc-8b03-0eec0cdaa00f.png)
-![image](https://user-images.githubusercontent.com/83453822/224001961-e2c962ac-d52b-4c6f-ba15-86d2d2f4bded.png)
+![image](https://github.com/Artemiy7/ticket/assets/83453822/1803fa20-46c4-4977-a3bc-370caa8d0919)
+![image](https://github.com/Artemiy7/ticket/assets/83453822/9b9c68bb-b950-49b7-a365-83ef3c159597)
+
 
 
 
