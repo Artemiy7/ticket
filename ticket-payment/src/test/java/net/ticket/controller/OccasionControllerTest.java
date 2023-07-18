@@ -1,13 +1,12 @@
 package net.ticket.controller;
 
-import lombok.NoArgsConstructor;
 import net.ticket.constant.enums.ticket.SeatPlaceType;
 import net.ticket.constant.enums.ticket.TicketType;
 import net.ticket.controller.occasion.OccasionController;
 import net.ticket.dto.occasion.OccasionDto;
 import net.ticket.dto.occasion.OccasionSeatDto;
+import net.ticket.response.error.ErrorResponse;
 import net.ticket.service.occasion.OccasionService;
-import net.ticket.ticketexception.occasion.NoSuchOccasionException;
 import net.ticket.util.ValidatorUtils;
 import org.apache.catalina.connector.RequestFacade;
 import org.bouncycastle.util.Objects;
@@ -31,7 +30,6 @@ import java.util.Set;
 import static org.mockito.ArgumentMatchers.any;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,20 +45,20 @@ class OccasionControllerTest {
     @BeforeEach
     public void init() {
         occasionSeatDto = OccasionSeatDto.builder()
-                .seat((short)10)
+                .seat(10)
                 .cost(BigDecimal.TEN)
                 .isBooked(false)
                 .seatPlaceType(SeatPlaceType.CONCERT_STADION_SEAT)
                 .build();
 
         occasionDto = OccasionDto.builder()
-                .daysToOccasion((short) 10)
+                .daysToOccasion(10)
                 .occasionTime(LocalDateTime.now())
-                .numberOfSeats((short) 1)
+                .numberOfSeats(1)
                 .occasionName("Concert Club - Test")
                 .occasionAddress("Test address 10")
                 .ticketType(TicketType.CONCERT_STADION)
-                .daysToOccasion((short) 10)
+                .daysToOccasion(10)
                 .occasionSeatDto(Set.of(occasionSeatDto)).build();
     }
 
@@ -71,31 +69,31 @@ class OccasionControllerTest {
         HttpServletRequest  httpServletRequest = mock(RequestFacade.class);
 
         when(occasionService.findOccasionWithOccasionSeats(any(Long.class))).thenReturn(Optional.of(occasionDto));
-        when(httpServletRequest.getRequestURI()).thenReturn("/findOccasionById/100000001");
+        when(httpServletRequest.getRequestURI()).thenReturn("/api/v1/occasions/100000001");
 
         ResponseEntity<OccasionDto> occasionDtoResponseEntity = occasionController.getOccasionById(100000001l, httpServletRequest);
 
         verify(occasionService, Mockito.times(1)).findOccasionWithOccasionSeats(100000001l);
         assert Objects.areEqual(occasionDtoResponseEntity.getBody(), occasionDto);
-        assert occasionDtoResponseEntity.getHeaders().get("path").get(0).equals("/findOccasionById/100000001");
-        assert occasionDtoResponseEntity.getHeaders().get("Content-Type").get(0).equals("application/json");
+        assert occasionDtoResponseEntity.getBody().getOccasionSeatDto().contains(occasionSeatDto);
+        assert httpServletRequest.getRequestURI().equals("/api/v1/occasions/100000001");
         assert occasionDtoResponseEntity.getStatusCode().equals(HttpStatus.OK);
     }
 
     @Test
     public void findOccasionByIdNoSuchOccasionTest() {
-//        OccasionController occasionController = new OccasionController(occasionService, validatorUtils);
-//        HttpServletRequest  httpServletRequest = mock(RequestFacade.class);
-//
-//        given(occasionService.findOccasionWithOccasionSeats(any(Long.class))).willThrow(new NoSuchOccasionException("No such OccasionEntity 100000001"));
-//        given(httpServletRequest.getRequestURI()).willReturn("/findOccasionById/100000001");
-//
-//        when(occasionController.getOccasionById(100000001, httpServletRequest));//.thenReturn(ResponseEntity.of(null));
+        OccasionController occasionController = new OccasionController(occasionService, validatorUtils);
+        HttpServletRequest  httpServletRequest = mock(RequestFacade.class);
 
-//        verify(occasionService, Mockito.times(1)).findOccasionWithOccasionSeats(100000001l);
-//        assert Objects.areEqual(occasionDtoResponseEntity.getBody(), occasionDto);
-//        assert occasionDtoResponseEntity.getHeaders().get("path").get(0).equals("/findOccasionById/100000001");
-//        assert occasionDtoResponseEntity.getHeaders().get("Content-Type").get(0).equals("application/json");
-//        assert occasionDtoResponseEntity.getStatusCode().equals(HttpStatus.OK);
+        given(occasionService.findOccasionWithOccasionSeats(any(Long.class))).willReturn(Optional.empty());
+        given(httpServletRequest.getRequestURI()).willReturn("/api/v1/occasions/100000001");
+
+        ResponseEntity occasionDtoResponseEntity = occasionController.getOccasionById(100000001l, httpServletRequest);
+        ErrorResponse errorResponse = (ErrorResponse) occasionDtoResponseEntity.getBody();
+
+        verify(occasionService, Mockito.times(1)).findOccasionWithOccasionSeats(100000001l);
+        assert Objects.areEqual(errorResponse.getPath(), "/api/v1/occasions/100000001");
+        assert Objects.areEqual(errorResponse.getHttpStatus(), HttpStatus.NOT_FOUND);
+        assert occasionDtoResponseEntity.getStatusCode().equals(HttpStatus.NOT_FOUND);
     }
 }
