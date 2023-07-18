@@ -91,7 +91,7 @@ public class TicketOrderServiceImpl implements TicketOrderService {
                 throw new OccasionSeatIsBookedException("OccasionSeat is booked " + occasionSeatEntity.getOccasionSeatId());
             customerTicketDto.setOccasionSeat(occasionSeatEntity);
         }
-        //bankSimulatorClient.sendConfirmationRequestToBankAccount(ticketOrderDto.getBankAccount());
+        bankSimulatorClient.sendConfirmationRequestToBankAccount(ticketOrderDto.getBankAccount());
 
         TicketOrderEntity ticketOrderEntity = ticketOrderDtoToTicketOrderEntityTransformer.transform(ticketOrderDto);
         ticketOrderRepository.saveTicketOrder(ticketOrderEntity);
@@ -111,7 +111,7 @@ public class TicketOrderServiceImpl implements TicketOrderService {
                             " OccasionId " + customerDto.getOccasionSeat().getOccasionSeatId());
                 });
 
-       // if (bankSimulatorClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
+        if (bankSimulatorClient.performPaymentRequestToBank(paymentRequestService.buildPaymentRequest(ticketOrderEntity)))
             ticketOrderEntity.setPaid(true);
 
         LOGGER.info("TicketOrder created successfully, bankAccount: " + ticketOrderEntity.getBankAccount() +
