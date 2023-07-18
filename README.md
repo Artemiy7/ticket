@@ -39,7 +39,7 @@ Execute to create Database:
 
 <h4 align="left">Models:</h4>
 
-![image](https://user-images.githubusercontent.com/83453822/224001698-54d0937e-bba6-4a50-bde0-5f18a6400fb3.png)
+![image](https://github.com/Artemiy7/ticket/assets/83453822/6c8b8bb6-9377-45db-b17d-1d1bb2c37558)
 ![image](https://user-images.githubusercontent.com/83453822/224001805-5c5a6149-f1c1-4cfc-8b03-0eec0cdaa00f.png)
 ![image](https://user-images.githubusercontent.com/83453822/224001961-e2c962ac-d52b-4c6f-ba15-86d2d2f4bded.png)
 
@@ -48,7 +48,7 @@ Execute to create Database:
 Within selection, the api will calculate the ticket price according to the seat and date.
 
 
-	GET localhost:8084/api/v1/occasion/1000000001
+	GET localhost:8084/api/v1/occasions/1000000001
 
 
 Result (reduced for readability):
@@ -72,21 +72,19 @@ Result:
 
 Fetch available filters:
 
-	localhost:8084/api/v1/occasion/filters
+	localhost:8084/api/v1/occasions/filters
 
 Result:
 
-![image](https://user-images.githubusercontent.com/83453822/224007965-59175b58-8b30-4cbf-8d34-af13884d5d30.png)
 
-
-	
+![image](https://github.com/Artemiy7/ticket/assets/83453822/d43a11e1-f599-41a2-8ca6-27de15240875)
 
 
 
 With selected Occasion you can create a pdf ticket with a qr-code. Default currency is "usd" but you can use another currency instead of "usd" for example "uah". In this case service will make a request to currency-exchange server and it will convert the currency you specified into "usd" according to the current exchange rate.
 e.g.:
 
-	POST localhost:8084/ticket
+	POST localhost:8084/tickets
 
 
 	{
@@ -108,7 +106,7 @@ e.g.:
 
 Api will return created TicketOrderId. It can be used generate pdf tiket with QR-code:
 
-	GET localhost:8084/api/v1/ticket/PDF/3000000001
+	GET localhost:8084/api/v1/tickets/PDF/3000000001
 	
 ticket-payment service will read TicketOrder from DB and will perform a request to pdf-generator to generate a pdf ticket for every Customer.
 
