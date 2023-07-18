@@ -84,14 +84,14 @@ public class OccasionServiceImpl implements OccasionService {
     private void checkOccasionEntityTime(OccasionEntity occasionEntity) throws OccasionOutdatedException {
         if (LocalDateTime.now().isAfter(occasionEntity.getOccasionTime().plusMinutes(30))) {
             LOGGER.error("Occasion is before current date " + occasionEntity.getOccasionId());
-            throw new OccasionOutdatedException(occasionEntity.getOccasionName().concat(" is before current date"));
+            throw new OccasionOutdatedException(occasionEntity.getOccasionName() + " is before current date");
         }
     }
 
     private void checkOccasionEntityNumberOfSeats(OccasionEntity occasionEntity) throws CorruptedOccasionException {
         if (occasionEntity.getNumberOfSeats() != occasionEntity.getOccasionSeatEntitySet().size()) {
             LOGGER.error("Occasion is corrupted " + occasionEntity.getOccasionId());
-            throw new CorruptedOccasionException(occasionEntity.getOccasionName().concat(" is corrupted"));
+            throw new CorruptedOccasionException(occasionEntity.getOccasionName() + " is corrupted");
         }
     }
 
