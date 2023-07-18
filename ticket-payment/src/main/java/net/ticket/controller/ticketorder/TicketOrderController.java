@@ -21,21 +21,21 @@ import java.util.Optional;
 @Api("Create TicketOrder and TicketPdf")
 @RestController
 @RequestMapping("api/v1/ticket")
-public class TicketOrderRestController {
-    private final static Logger LOGGER = LoggerFactory.getLogger(TicketOrderRestController.class);
+public class TicketOrderController {
+    private final static Logger LOGGER = LoggerFactory.getLogger(TicketOrderController.class);
     private final TicketOrderService ticketOrderService;
     private final ValidatorUtils validatorUtils;
 
-    public TicketOrderRestController(TicketOrderService ticketOrderService,
-                                     ValidatorUtils validatorUtils) {
+    public TicketOrderController(TicketOrderService ticketOrderService,
+                                 ValidatorUtils validatorUtils) {
         this.ticketOrderService = ticketOrderService;
         this.validatorUtils = validatorUtils;
     }
 
     @ApiOperation("Create TicketOrder in the DB and return TicketOrderId")
-    @RequestMapping(value = "/create", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Long> createTicketOrder(@RequestBody TicketOrderDto ticketOrderDto) {
-        validatorUtils.validationAfterSerialization(validatorUtils);
+        validatorUtils.validationAfterSerialization(ticketOrderDto);
         ticketOrderDto.getCustomerTicketDto().forEach(validatorUtils::validationAfterSerialization);
         for (CustomerTicketDto customerTicketDto : ticketOrderDto.getCustomerTicketDto()) {
             if (!ticketOrderDto.getTicketType().getSeatPlaceTypes().contains(customerTicketDto.getSeatPlaceType())) {
