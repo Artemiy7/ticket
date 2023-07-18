@@ -16,7 +16,7 @@ import javax.persistence.*;
         @NamedQuery(name = OccasionSeatNamedQueriesConstants.findOccasionSeatsByOccasionIdAndSeat,
         query = "SELECT os FROM OccasionSeatEntity os WHERE os.occasionEntity=:OccasionId AND os.seat=:Seat"),
         @NamedQuery(name = OccasionSeatNamedQueriesConstants.countNotBookedOccasionSeats,
-        query = "SELECT COUNT(os.occasionEntity) FROM OccasionSeatEntity os WHERE os.occasionEntity=:OccasionId AND os.isBooked=:IsBooked"),
+        query = "SELECT COUNT(os.occasionEntity.id) FROM OccasionSeatEntity os WHERE os.occasionEntity.id=:OccasionId AND os.isBooked=:IsBooked"),
         @NamedQuery(name = OccasionSeatNamedQueriesConstants.updateOccasionSeatSetIsBooked,
         query = "UPDATE OccasionSeatEntity os SET os.isBooked = true WHERE os.occasionEntity=:OccasionId AND os.seat=:Seat")
 })

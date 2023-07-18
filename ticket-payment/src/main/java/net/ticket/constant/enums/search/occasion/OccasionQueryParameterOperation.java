@@ -23,7 +23,7 @@ public enum OccasionQueryParameterOperation implements OccasionFilter {
         return builder.equal(root.get("occasionName"), requestParam);
     }),
 
-    @JsonProperty("occasion_name")
+    @JsonProperty("occasion_address")
     OCCASION_ADDRESS("occasion_address", false, (root, query, builder, requestParam) -> {
         return builder.equal(root.get("occasionAddress"), requestParam);
     }),

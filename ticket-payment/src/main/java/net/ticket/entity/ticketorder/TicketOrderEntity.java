@@ -1,4 +1,4 @@
-package net.ticket.entity.ticketorder;
+package net.ticket.domain.entity.ticketorder;
 
 
 import lombok.*;

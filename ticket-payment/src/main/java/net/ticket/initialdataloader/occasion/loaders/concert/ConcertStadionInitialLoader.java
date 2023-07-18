@@ -3,7 +3,7 @@ package net.ticket.initialdataloader.occasion.loaders.concert;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.dto.occasion.occasionloader.OccasionLoaderDto;
-import net.ticket.entity.occasion.OccasionEntity;
+import net.ticket.domain.entity.occasion.OccasionEntity;
 import net.ticket.constant.enums.occasionloader.OccasionLoader;
 import net.ticket.constant.enums.ticket.TicketType;
 import net.ticket.initialdataloader.InitialLoader;
@@ -53,7 +53,7 @@ public class ConcertStadionInitialLoader implements InitialLoader<OccasionEntity
                     }
                     Set<OccasionSeatDto> occasionSeatDtoSet = new HashSet<>();
                     occasionLoaderDto.getOccasionSeatLoaderDtoSet().forEach(occasionSeatLoaderDto -> {
-                        for (short seatNumber = occasionSeatLoaderDto.getFrom(); seatNumber <= occasionSeatLoaderDto.getTo(); seatNumber++) {
+                        for (int seatNumber = occasionSeatLoaderDto.getFrom(); seatNumber <= occasionSeatLoaderDto.getTo(); seatNumber++) {
                             occasionSeatDtoSet.add(new OccasionSeatDto(BigDecimal.ZERO, seatNumber, occasionSeatLoaderDto.getOccasionDto(),
                                     occasionSeatLoaderDto.isBooked(), occasionSeatLoaderDto.getSeatPlaceType()));
                         }

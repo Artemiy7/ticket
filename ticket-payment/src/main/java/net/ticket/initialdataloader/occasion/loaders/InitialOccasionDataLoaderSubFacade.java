@@ -2,7 +2,7 @@ package net.ticket.initialdataloader.occasion.loaders;
 
 import net.ticket.ApplicationContextProvider;
 import net.ticket.config.occasion.loader.InitialOccasionLoaderConfig;
-import net.ticket.entity.occasion.OccasionEntity;
+import net.ticket.domain.entity.occasion.OccasionEntity;
 import net.ticket.initialdataloader.InitialLoader;
 import net.ticket.service.occasion.OccasionService;
 import org.springframework.stereotype.Component;
