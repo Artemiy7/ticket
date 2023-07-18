@@ -62,13 +62,6 @@ You can use filters and pagination to retrieve data you need:
 
 	GET localhost:8084/api/v1/occasion?TICKET_TYPE=TRAIN_INTERCITY&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=30
 	
-		
-	{
-  	    "size": 3,
-  	    "resultOrder": 3,
-  	    "withOutdated": false,
-  	    "sortingOrder": "ASC"
-	}
 
 Result:
 
