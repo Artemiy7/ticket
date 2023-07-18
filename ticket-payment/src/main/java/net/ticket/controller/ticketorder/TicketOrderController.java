@@ -20,7 +20,7 @@ import java.util.Optional;
 
 @Api("Create TicketOrder and TicketPdf")
 @RestController
-@RequestMapping("api/v1/ticket")
+@RequestMapping("api/v1/tickets")
 public class TicketOrderController {
     private final static Logger LOGGER = LoggerFactory.getLogger(TicketOrderController.class);
     private final TicketOrderService ticketOrderService;

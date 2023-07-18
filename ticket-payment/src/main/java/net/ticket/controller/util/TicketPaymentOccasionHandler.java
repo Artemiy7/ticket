@@ -1,7 +1,7 @@
 package net.ticket.controller.util;
 
 import net.ticket.controller.occasion.OccasionController;
-import net.ticket.controller.ticketorder.TicketOrderRestController;
+import net.ticket.controller.ticketorder.TicketOrderController;
 import net.ticket.response.error.ErrorResponse;
 import net.ticket.response.error.SerializationErrorResponse;
 import net.ticket.ticketexception.DeserializationException;
@@ -16,7 +16,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
-@ControllerAdvice(basePackageClasses = {OccasionController.class, TicketOrderRestController.class})
+@ControllerAdvice(basePackageClasses = {OccasionController.class, TicketOrderController.class})
 public class TicketPaymentOccasionHandler {
 
     @ExceptionHandler({NoSuchOccasionException.class})

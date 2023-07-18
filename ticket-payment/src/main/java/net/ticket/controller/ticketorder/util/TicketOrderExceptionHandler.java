@@ -1,6 +1,6 @@
 package net.ticket.controller.ticketorder.util;
 
-import net.ticket.controller.ticketorder.TicketOrderRestController;
+import net.ticket.controller.ticketorder.TicketOrderController;
 import net.ticket.response.error.ErrorResponse;
 import net.ticket.ticketexception.bank.BankServerError;
 import net.ticket.ticketexception.bank.InvalidBankAccount;
@@ -17,7 +17,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 
-@ControllerAdvice(basePackageClasses = TicketOrderRestController.class)
+@ControllerAdvice(basePackageClasses = TicketOrderController.class)
 public class TicketOrderExceptionHandler {
 
     @ExceptionHandler({NoSuchOccasionSeatException.class, OccasionSeatIsBookedException.class, CorruptedOccasionException.class})
