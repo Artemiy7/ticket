@@ -1,10 +1,8 @@
 package net.ticket.service.ticketorder;
 
-import net.ticket.entity.ticketorder.CustomerTicketEntity;
-import net.ticket.entity.ticketorder.TicketOrderEntity;
+import net.ticket.domain.entity.ticketorder.CustomerTicketEntity;
+import net.ticket.domain.entity.ticketorder.TicketOrderEntity;
 import net.ticket.request.payment.PaymentRequest;
-import net.ticket.dto.ticketorder.CustomerTicketDto;
-import net.ticket.dto.ticketorder.TicketOrderDto;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

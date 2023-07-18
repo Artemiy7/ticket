@@ -6,13 +6,13 @@ import net.ticket.repository.occasion.OccasionRepository;
 import net.ticket.dto.occasion.OccasionDto;
 import net.ticket.domain.entity.occasion.OccasionEntity;
 import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
+import net.ticket.repository.occasion.OccasionSeatRepository;
 import net.ticket.service.occasion.cost.OccasionCost;
 import net.ticket.ticketexception.occasion.*;
 import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoNoSeatsTransformer;
 import net.ticket.transformer.occasion.OccasionEntityToOccasionDtoTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -28,14 +28,16 @@ public class OccasionServiceImpl implements OccasionService {
     private final OccasionEntityToOccasionDtoTransformer occasionEntityToOccasionDtoTransformer;
     private final OccasionEntityToOccasionDtoNoSeatsTransformer occasionEntityToOccasionDtoNoSeatsTransformer;
     private final OccasionRepository occasionRepository;
+    private final OccasionSeatRepository occasionSeatRepository;
 
-    @Autowired
     public OccasionServiceImpl(OccasionEntityToOccasionDtoTransformer occasionEntityToOccasionDtoTransformer,
                                OccasionEntityToOccasionDtoNoSeatsTransformer occasionEntityToOccasionDtoNoSeatsTransformer,
-                               OccasionRepository occasionRepository) {
+                               OccasionRepository occasionRepository,
+                               OccasionSeatRepository occasionSeatRepository) {
         this.occasionEntityToOccasionDtoTransformer = occasionEntityToOccasionDtoTransformer;
         this.occasionEntityToOccasionDtoNoSeatsTransformer = occasionEntityToOccasionDtoNoSeatsTransformer;
         this.occasionRepository = occasionRepository;
+        this.occasionSeatRepository = occasionSeatRepository;
     }
 
     @Transactional(readOnly = true)
@@ -72,8 +74,8 @@ public class OccasionServiceImpl implements OccasionService {
      * Not performance-safe.
      * Only if you have already fetched OccasionSeatEntitySet.
      */
-    private short getNotBookedSeats(OccasionEntity occasionEntity) {
-        return (short) occasionEntity.getOccasionSeatEntitySet()
+    private int getNotBookedSeats(OccasionEntity occasionEntity) {
+        return (int) occasionEntity.getOccasionSeatEntitySet()
                 .stream()
                 .filter(seat -> !seat.isBooked())
                 .count();
@@ -136,7 +138,7 @@ public class OccasionServiceImpl implements OccasionService {
                         .stream()
                         .map(occasionEntity ->
                             occasionEntityToOccasionDtoNoSeatsTransformer.transform(occasionEntity)
-                                    .setNotBookedSeats(occasionRepository.findNotBookedSeatForOccasion(occasionEntity))
+                                    .setNotBookedSeats(occasionSeatRepository.countNotBookedOccasionSeats(occasionEntity))
                                     .setDaysToOccasion(calculateDaysToOccasion(occasionEntity.getOccasionTime())))
                         .collect(Collectors.toList()));
     }
@@ -159,6 +161,6 @@ public class OccasionServiceImpl implements OccasionService {
     @Transactional
     @Override
     public void setOutdatedOccasionNotActiveByCurrentDate() {
-        occasionRepository.setOutdatedOccasionNotActive(LocalDateTime.now());
+        occasionRepository.updateOutdatedOccasionSetNotActive(LocalDateTime.now());
     }
 }

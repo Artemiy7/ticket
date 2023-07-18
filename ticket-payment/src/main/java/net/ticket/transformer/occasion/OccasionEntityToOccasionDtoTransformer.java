@@ -1,7 +1,7 @@
 package net.ticket.transformer.occasion;
 
 import net.ticket.dto.occasion.OccasionDto;
-import net.ticket.entity.occasion.OccasionEntity;
+import net.ticket.domain.entity.occasion.OccasionEntity;
 import net.ticket.transformer.occasion.occasionseat.OccasionSeatEntityToOccasionSeatDtoTransformer;
 import net.ticket.transformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;

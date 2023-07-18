@@ -1,6 +1,8 @@
 package net.ticket.domain.entity.occasion;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import net.ticket.constant.OccasionNamedQueriesConstants;
 import net.ticket.constant.enums.ticket.TicketType;
 import org.springframework.lang.NonNull;
 
@@ -15,6 +17,12 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
+@NamedQueries({
+    @NamedQuery(name = OccasionNamedQueriesConstants.findByNameAndDateAndAddress,
+    query = "SELECT os FROM OccasionEntity os WHERE os.occasionName=:OccasionName AND os.occasionTime=:OccasionTime AND os.ticketType=:TicketType AND os.occasionAddress=:OccasionAddress"),
+    @NamedQuery(name = OccasionNamedQueriesConstants.updateOutdatedOccasionSetNotActive,
+    query = "UPDATE OccasionEntity os SET os.isActive = false WHERE os.occasionTime>=:OccasionTime")
+})
 @Entity
 @Table(name = "Occasion")
 public class OccasionEntity implements Comparable<OccasionEntity>, Serializable {

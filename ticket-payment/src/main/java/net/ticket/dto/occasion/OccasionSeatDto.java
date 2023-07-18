@@ -17,7 +17,7 @@ public class OccasionSeatDto {
     @Positive
     private BigDecimal cost;
     @Positive
-    private short seat;
+    private int seat;
     @JsonBackReference
     private OccasionDto occasionDto;
     private boolean isBooked;

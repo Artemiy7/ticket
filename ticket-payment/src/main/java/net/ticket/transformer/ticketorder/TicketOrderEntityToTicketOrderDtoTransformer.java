@@ -2,8 +2,8 @@ package net.ticket.transformer.ticketorder;
 
 import net.ticket.dto.ticketorder.CustomerTicketDto;
 import net.ticket.dto.ticketorder.TicketOrderDto;
-import net.ticket.entity.occasion.OccasionEntity;
-import net.ticket.entity.ticketorder.TicketOrderEntity;
+import net.ticket.domain.entity.occasion.OccasionEntity;
+import net.ticket.domain.entity.ticketorder.TicketOrderEntity;
 import net.ticket.transformer.ticketorder.customer.CustomerEntityToCustomerDtoTransformer;
 import net.ticket.transformer.Transformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class TicketOrderEntityToTicketOrderDtoTransformer implements Transformer
                                                       .currency(defaultCurrency)
                                                       .occasionAddress(occasionEntity.getOccasionAddress())
                                                       .occasionName(occasionEntity.getOccasionName())
-                                                      .occasionDate(occasionEntity.getOccasionTime())
+                                                      .occasionTime(occasionEntity.getOccasionTime())
                                                       .ticketType(ticketOrderEntity.getTicketType())
                                                       .customerTicketDto(customerTicketDtoSet)
                                                       .build();

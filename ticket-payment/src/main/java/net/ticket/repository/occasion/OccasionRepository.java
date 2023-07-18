@@ -1,5 +1,6 @@
 package net.ticket.repository.occasion;
 
+import net.ticket.constant.OccasionNamedQueriesConstants;
 import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
 import net.ticket.domain.entity.occasion.OccasionSeatEntity;
 import net.ticket.domain.pagination.PageAndSortingObject;
@@ -18,9 +19,7 @@ import java.util.Optional;
 @Repository
 public class OccasionRepository {
     @PersistenceContext
-    EntityManager entityManager;
-    private final String findOccasionByNameAndDateAndAddressQuery = "SELECT os FROM Occasion os WHERE os.OccasionName=:OccasionName AND os.OccasionTime=:OccasionTime " +
-                                                                    "AND os.TicketType=:TicketType AND os.OccasionAddress=:OccasionAddress";
+    private EntityManager entityManager;
 
     public Optional<OccasionEntity> getOccasionById(long id) {
         return Optional.ofNullable(entityManager.find(OccasionEntity.class, id));
@@ -31,17 +30,16 @@ public class OccasionRepository {
         CriteriaQuery<OccasionEntity> criteriaQuery = criteriaBuilder.createQuery(OccasionEntity.class);
         Root<OccasionEntity> root = criteriaQuery.from(OccasionEntity.class);
         List<Predicate> searchRestrictions = new ArrayList<>();
-        Join<OccasionEntity, OccasionSeatEntity> join = null;
 
         for (Map.Entry<OccasionQueryParameterOperation, List<String>> entry : occasionSearchMap.entrySet()) {
             if (entry.getValue().size() > 1) {
                 List<Predicate> sameTypePredicatesList = new ArrayList<>();
                 entry.getValue().forEach(value -> {
-                    sameTypePredicatesList.add(entry.getKey().filterOccasion(root, criteriaQuery, criteriaBuilder, join, value));
+                    sameTypePredicatesList.add(entry.getKey().filterOccasion(root, criteriaQuery, criteriaBuilder, value));
                 });
                 searchRestrictions.add(criteriaBuilder.or(sameTypePredicatesList.toArray(new Predicate[sameTypePredicatesList.size()])));
             } else {
-                searchRestrictions.add(criteriaBuilder.and(entry.getKey().filterOccasion(root, criteriaQuery, criteriaBuilder, join, entry.getValue().get(0))));
+                searchRestrictions.add(criteriaBuilder.and(entry.getKey().filterOccasion(root, criteriaQuery, criteriaBuilder, entry.getValue().get(0))));
             }
         }
         criteriaQuery.where(criteriaBuilder.and(searchRestrictions.toArray(new Predicate[searchRestrictions.size()])));
@@ -63,44 +61,37 @@ public class OccasionRepository {
     }
 
     public Optional<OccasionEntity> findOccasionByNameAndDateAndAddress(TicketOrderDto ticketOrderDto) {
-        Query query = entityManager.createNativeQuery(findOccasionByNameAndDateAndAddressQuery, OccasionEntity.class);
+        TypedQuery<OccasionEntity> query = entityManager.createNamedQuery(OccasionNamedQueriesConstants.findByNameAndDateAndAddress, OccasionEntity.class);
         query.setParameter("OccasionName", ticketOrderDto.getOccasionName());
-        query.setParameter("OccasionTime", ticketOrderDto.getOccasionDate().toString());
-        query.setParameter("TicketType", ticketOrderDto.getTicketType().name());
+        query.setParameter("OccasionTime", LocalDateTime.parse(ticketOrderDto.getOccasionTime().toString()));
+        query.setParameter("TicketType", ticketOrderDto.getTicketType());
         query.setParameter("OccasionAddress", ticketOrderDto.getOccasionAddress());
         try {
-            return Optional.ofNullable((OccasionEntity) query.getSingleResult());
+            return Optional.ofNullable(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
     }
 
     public Optional<OccasionEntity> findOccasionByNameAndDateAndAddress(OccasionEntity occasionEntity) {
-        Query query = entityManager.createNativeQuery(findOccasionByNameAndDateAndAddressQuery, OccasionEntity.class);
+        TypedQuery<OccasionEntity> query = entityManager.createNamedQuery(OccasionNamedQueriesConstants.findByNameAndDateAndAddress, OccasionEntity.class);
         query.setParameter("OccasionName", occasionEntity.getOccasionName());
-        query.setParameter("OccasionTime", occasionEntity.getOccasionTime().toString());
-        query.setParameter("TicketType", occasionEntity.getTicketType().name());
+        query.setParameter("OccasionTime", LocalDateTime.parse(occasionEntity.getOccasionTime().toString()));
+        query.setParameter("TicketType", occasionEntity.getTicketType());
         query.setParameter("OccasionAddress", occasionEntity.getOccasionAddress());
         try {
-            return Optional.ofNullable((OccasionEntity) query.getSingleResult());
+            return Optional.ofNullable(query.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
         }
-    }
-
-    public short findNotBookedSeatForOccasion(OccasionEntity occasionEntity) {
-        Query query = entityManager.createNativeQuery("SELECT COUNT(os.OccasionId) FROM OccasionSeat os WHERE os.OccasionId=:OccasionId AND os.IsBooked=:IsBooked");
-        query.setParameter("OccasionId", occasionEntity.getOccasionId());
-        query.setParameter("IsBooked", false);
-        return Short.parseShort(query.getSingleResult().toString( ));
     }
 
     public void persistOccasion(OccasionEntity occasionEntity) {
         entityManager.persist(occasionEntity);
     }
 
-    public void setOutdatedOccasionNotActive(LocalDateTime localDateTime) {
-        Query query = entityManager.createNativeQuery("UPDATE Occasion os SET IsActive = false WHERE os.OccasionTime>=:OccasionTime", OccasionEntity.class);
+    public void updateOutdatedOccasionSetNotActive(LocalDateTime localDateTime) {
+        Query query = entityManager.createNamedQuery(OccasionNamedQueriesConstants.updateOutdatedOccasionSetNotActive);
         query.setParameter("OccasionTime", localDateTime);
         query.executeUpdate();
     }

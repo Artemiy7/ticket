@@ -10,9 +10,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class PaymentRequest {
-    @NonNull
     private long bankAccount;
-    @NonNull
     private long ticketOrderId;
     @NonNull
     private BigDecimal amountSum;

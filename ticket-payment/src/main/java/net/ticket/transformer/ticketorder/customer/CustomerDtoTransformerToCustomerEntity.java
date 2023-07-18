@@ -1,7 +1,7 @@
 package net.ticket.transformer.ticketorder.customer;
 
 import net.ticket.dto.ticketorder.CustomerTicketDto;
-import net.ticket.entity.ticketorder.CustomerTicketEntity;
+import net.ticket.domain.entity.ticketorder.CustomerTicketEntity;
 import net.ticket.transformer.Transformer;
 import org.springframework.stereotype.Component;
 

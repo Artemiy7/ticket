@@ -1,9 +1,8 @@
-package net.ticket.entity.ticketorder;
+package net.ticket.domain.entity.ticketorder;
 
 
 import lombok.*;
-import net.ticket.entity.occasion.OccasionSeatEntity;
-import org.springframework.lang.NonNull;
+import net.ticket.domain.entity.occasion.OccasionSeatEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
