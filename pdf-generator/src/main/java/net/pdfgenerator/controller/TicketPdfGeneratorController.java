@@ -7,10 +7,7 @@ import net.pdfgenerator.dto.ticketorder.TicketOrderDto;
 import net.pdfgenerator.service.PdfTicketCreatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.http.converter.ByteArrayHttpMessageConverter;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -25,7 +22,7 @@ public class TicketPdfGeneratorController {
     }
 
     @ApiOperation("Create pdf ticket with QR code from TicketOrder")
-    @PostMapping(value = "api/v1/generateTicketPdf", produces = {MediaType.APPLICATION_PDF_VALUE})
+    @PostMapping(value = "api/v1/pdf-generator", produces = {MediaType.APPLICATION_PDF_VALUE})
     public ResponseEntity<byte[]> createTicketPdf(@RequestBody TicketOrderDto ticketOrderDto) {
         HttpHeaders headers = new HttpHeaders();
         try {
