@@ -60,13 +60,13 @@ Result (reduced for readability):
 
 You can use filters and pagination to retrieve data you need:
 
-	GET localhost:8084/api/v1/occasion?TICKET_TYPE=TRAIN_INTERCITY&TICKET_TYPE=CONCERT_STADION&NOT_BOOKED_SEATS_FROM=30
+	GET localhost:8084/api/v1/occasions?ticket_type=TRAIN_INTERCITY&ticket_type=CONCERT_STADION&occasion_seats_from=30&size=3&page=0&sorting_order=DESC&sorting_field=occasionId
 	
 
 Result:
 
 
-![image](https://user-images.githubusercontent.com/83453822/224021064-6983236e-c778-435e-a2d2-816e98ab651e.png)
+![image](https://github.com/Artemiy7/ticket/assets/83453822/a739ad83-0140-4a14-99ed-9aee5bd7f9ae)
 
 
 
