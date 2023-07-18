@@ -88,7 +88,7 @@ public class OccasionController {
     }
 
     @ApiOperation(value = "Returns number of filter parameters")
-    @RequestMapping(value = "/fetchFilters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/filters", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OccasionQueryParameterOperation>> fetchOccasionFilters() {
         return ResponseEntity.ok()
                              .body(OccasionQueryParameterOperation.getOccasionFilterTypeList());
