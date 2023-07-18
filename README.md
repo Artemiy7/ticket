@@ -1,4 +1,4 @@
-<h2 align="left">Ticket app that creates pdf ticket with QR-code</h2>
+![image](https://github.com/Artemiy7/ticket/assets/83453822/dd45b937-65f0-4ada-a6e6-15ec68e2ebb4)<h2 align="left">Ticket app that creates pdf ticket with QR-code</h2>
 <h4 align="left">! The project is not yet completed and still is in the development phase.
 In the next releases, it is planned to decompose the ticket-payment service into occasion-service and ticket-order-service and add a message broker for implementing a saga pattern. I also plan to separate qr-code generation into a separate service and add functionality to read QR-codes.
 In addition, I plan to launch the project on AWS and replace CircleCi to Jenkins. !</h4>
@@ -122,7 +122,11 @@ ticket-payment service will read TicketOrder from DB and will perform a request 
 
 <h4 align="left">Endpoints and Models:</h4>
 
-![image](https://user-images.githubusercontent.com/83453822/224009913-ec0e07ce-810a-4d18-ab3c-105acbfb287d.png)
+
+
+![image](https://github.com/Artemiy7/ticket/assets/83453822/5743000f-a0dc-43cf-b852-81f81c9d69d8)
+
+
 
 
 
