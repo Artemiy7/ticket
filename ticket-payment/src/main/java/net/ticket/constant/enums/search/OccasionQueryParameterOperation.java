@@ -1,4 +1,4 @@
-package net.ticket.constant.enums.search.occasion;
+package net.ticket.constant.enums.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import net.ticket.constant.enums.ticket.TicketType;

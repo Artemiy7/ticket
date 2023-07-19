@@ -1,8 +1,7 @@
 package net.ticket.repository.occasion;
 
 import net.ticket.constant.OccasionNamedQueriesConstants;
-import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
-import net.ticket.domain.entity.occasion.OccasionSeatEntity;
+import net.ticket.constant.enums.search.OccasionQueryParameterOperation;
 import net.ticket.domain.pagination.PageAndSortingObject;
 import net.ticket.dto.ticketorder.TicketOrderDto;
 import net.ticket.domain.entity.occasion.OccasionEntity;

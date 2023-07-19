@@ -5,7 +5,7 @@ import net.ticket.dto.occasion.OccasionSeatDto;
 import net.ticket.repository.occasion.OccasionRepository;
 import net.ticket.dto.occasion.OccasionDto;
 import net.ticket.domain.entity.occasion.OccasionEntity;
-import net.ticket.constant.enums.search.occasion.OccasionQueryParameterOperation;
+import net.ticket.constant.enums.search.OccasionQueryParameterOperation;
 import net.ticket.repository.occasion.OccasionSeatRepository;
 import net.ticket.service.occasion.cost.OccasionCost;
 import net.ticket.ticketexception.occasion.*;
